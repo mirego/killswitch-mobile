@@ -2,6 +2,7 @@ package com.mirego.killswitch
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
 import java.lang.ref.WeakReference
 
 class Killswitch(activity: Activity) {
@@ -41,7 +42,7 @@ class Killswitch(activity: Activity) {
 
 private fun AlertDialog.Builder.setButtons(response: Response, activity: Activity): AlertDialog.Builder =
     apply {
-        fun doAction(dialog: AlertDialog) {
+        fun executeCloseAction(dialog: DialogInterface) {
             if (response.action == Action.KILL) {
                 kill()
             } else {
@@ -52,19 +53,11 @@ private fun AlertDialog.Builder.setButtons(response: Response, activity: Activit
         response.buttons?.forEach { button ->
             when (button.type) {
                 ButtonType.CANCEL -> setNegativeButton(button.label) { dialog, _ ->
-                    if (response.action == Action.KILL) {
-                        kill()
-                    } else {
-                        dialog.dismiss()
-                    }
+                    executeCloseAction(dialog)
                 }
                 ButtonType.URL -> setPositiveButton(button.label) { dialog, _ ->
                     activity.openAppInPlaystore(button.url)
-                    if (response.action == Action.KILL) {
-                        kill()
-                    } else {
-                        dialog.dismiss()
-                    }
+                    executeCloseAction(dialog)
                 }
             }
         }
