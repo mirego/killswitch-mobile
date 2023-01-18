@@ -33,10 +33,19 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val killswitch = Killswitch(this)
+
         setContent {
             KillswitchSampleTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Content()
+                    val scope = rememberCoroutineScope()
+
+                    Content { key, version, language ->
+                        scope.launch {
+                            killswitch.engage(key, version, language)
+                        }
+                    }
                 }
             }
         }
@@ -44,12 +53,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Content() {
-    val scope = rememberCoroutineScope()
-
+private fun Content(engage: (String, String, String) -> Unit) {
     var key by remember { mutableStateOf("") }
     var version by remember { mutableStateOf("") }
-    var response by remember { mutableStateOf("") }
+    var language by remember { mutableStateOf("") }
 
     Column(
         Modifier
@@ -77,19 +84,17 @@ private fun Content() {
             label = { Text("Version") },
             modifier = Modifier.fillMaxWidth()
         )
+        TextField(
+            value = language,
+            onValueChange = { language = it },
+            label = { Text("Language") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Button(onClick = {
-            scope.launch {
-                response = try {
-                    Killswitch.engage(key, version).toString()
-                } catch (e: Exception) {
-                    e.cause?.message.orEmpty()
-                }
-            }
+            engage(key, version, language)
         }) {
             Text("Engage")
         }
-
-        Text("Response:\n\n$response")
     }
 }
 
@@ -97,6 +102,6 @@ private fun Content() {
 @Composable
 private fun Preview() {
     KillswitchSampleTheme {
-        Content()
+        Content { _, _, _ -> }
     }
 }
