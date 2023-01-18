@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.KillswitchSample" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="CustomAlertDialog" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">#3153a1</item>
+        <item name="android:textColorPrimary">#3153a1</item>
+    </style>
 </resources>

@@ -41,6 +41,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-okhttp:${Versions.KTOR}")
+                implementation("androidx.annotation:annotation:1.5.0")
             }
         }
         val androidTest by getting

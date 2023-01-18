@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val killswitch = Killswitch(this)
+        val killswitch = Killswitch(this, R.style.CustomAlertDialog)
 
         setContent {
             KillswitchSampleTheme {

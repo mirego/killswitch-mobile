@@ -3,9 +3,10 @@ package com.mirego.killswitch
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import androidx.annotation.StyleRes
 import java.lang.ref.WeakReference
 
-class Killswitch(activity: Activity) {
+class Killswitch(activity: Activity, @StyleRes private val themeResId: Int? = null) {
     private val activityReference = WeakReference(activity)
 
     init {
@@ -24,7 +25,8 @@ class Killswitch(activity: Activity) {
 
         if (activity == null || activity.isFinishing || response.action == null || response.action == Action.OK) return
 
-        val dialog = AlertDialog.Builder(activity)
+        val builder = if (themeResId != null) AlertDialog.Builder(activity, themeResId) else AlertDialog.Builder(activity)
+        val dialog = builder
             .setCancelable(false)
             .setMessage(response.message)
             .setButtons(response, activity)
