@@ -74,7 +74,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("com.mirego.compose:utils:1.0.1-dev28")
+    implementation("com.mirego.compose:utils:1.0.1-dev30")
 }
 
 ktlint {

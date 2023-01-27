@@ -1,21 +1,26 @@
 package com.mirego.killswitch.sample
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,27 +28,47 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mirego.killswitch.Killswitch
+import com.mirego.killswitch.AndroidKillswitch
+import com.mirego.killswitch.navigateToKillswitchUrl
 import com.mirego.killswitch.sample.ui.theme.KillswitchSampleTheme
+import com.mirego.killswitch.viewmodel.KillswitchViewData
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val killswitch = Killswitch(this, R.style.CustomAlertDialog)
-
         setContent {
             KillswitchSampleTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    val scope = rememberCoroutineScope()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Box(Modifier.fillMaxSize()) {
+                        val viewData = remember { mutableStateOf<KillswitchViewData?>(null) }
+                        val scope = rememberCoroutineScope()
 
-                    Content { key, version, language ->
-                        scope.launch {
-                            killswitch.engage(key, version, language)
+                        Content(
+                            Modifier.run {
+                                if (viewData.value != null) blur(5.dp) else this
+                            }
+                        ) { key, version, language, customDialog ->
+                            scope.launch {
+                                engage(key, version, language, customDialog, viewData, this@MainActivity)
+                            }
+                        }
+
+                        when (val localViewData = viewData.value) {
+                            is KillswitchViewData.Dialog -> CustomDialog(
+                                viewData = localViewData,
+                                dismiss = { viewData.value = null },
+                                navigateToUrl = { this@MainActivity.navigateToKillswitchUrl(it) }
+                            )
+                            else -> Unit
                         }
                     }
                 }
@@ -52,14 +77,34 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private suspend fun engage(
+    key: String,
+    version: String,
+    language: String,
+    customDialog: Boolean,
+    viewData: MutableState<KillswitchViewData?>,
+    activity: Activity
+) {
+    if (customDialog) {
+        viewData.value = AndroidKillswitch.engage(key, version, language)
+    } else {
+        AndroidKillswitch.handleResponse(
+            viewData = AndroidKillswitch.engage(key, version, language),
+            activity = activity,
+            themeResId = R.style.CustomAlertDialog
+        )
+    }
+}
+
 @Composable
-private fun Content(engage: (String, String, String) -> Unit) {
+private fun Content(modifier: Modifier = Modifier, engage: (String, String, String, Boolean) -> Unit) {
     var key by remember { mutableStateOf("") }
     var version by remember { mutableStateOf("") }
     var language by remember { mutableStateOf("") }
+    var customDialog by remember { mutableStateOf(false) }
 
     Column(
-        Modifier
+        modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -71,7 +116,6 @@ private fun Content(engage: (String, String, String) -> Unit) {
                 .size(128.dp)
                 .align(Alignment.CenterHorizontally)
         )
-
         TextField(
             value = key,
             onValueChange = { key = it },
@@ -90,9 +134,11 @@ private fun Content(engage: (String, String, String) -> Unit) {
             label = { Text("Language") },
             modifier = Modifier.fillMaxWidth()
         )
-        Button(onClick = {
-            engage(key, version, language)
-        }) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Custom dialog")
+            Checkbox(checked = customDialog, onCheckedChange = { customDialog = it })
+        }
+        Button(onClick = { engage(key, version, language, customDialog) }) {
             Text("Engage")
         }
     }
@@ -102,6 +148,6 @@ private fun Content(engage: (String, String, String) -> Unit) {
 @Composable
 private fun Preview() {
     KillswitchSampleTheme {
-        Content { _, _, _ -> }
+        Content { _, _, _, _ -> }
     }
 }

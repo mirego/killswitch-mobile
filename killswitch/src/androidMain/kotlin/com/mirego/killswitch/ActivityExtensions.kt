@@ -5,8 +5,8 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 
-fun Activity.openAppInPlaystore(appUrl: String?) {
-    val uri = Uri.parse(appUrl)
+fun Activity.navigateToKillswitchUrl(url: String?) {
+    val uri = Uri.parse(url)
 
     try {
         val playStoreIntent = Intent(Intent.ACTION_VIEW, uri)

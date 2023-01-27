@@ -1,10 +1,10 @@
-package com.mirego.killswitch
+package com.mirego.killswitch.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Action {
+internal enum class Action {
     @SerialName("ok")
     OK,
 
