@@ -4,7 +4,10 @@ plugins {
     id("com.android.library")
     kotlin("plugin.serialization") version Versions.KOTLIN
     id("org.jlleitschuh.gradle.ktlint")
+    id("mirego.publish")
 }
+
+group = "com.mirego.killswitch-mobile"
 
 kotlin {
     android()
@@ -77,6 +80,17 @@ android {
     namespace = "com.mirego.killswitch"
     compileSdk = 33
     defaultConfig {
-        minSdk = 28
+        minSdk = 14
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                artifactId = "killswitch"
+            }
+        }
     }
 }
