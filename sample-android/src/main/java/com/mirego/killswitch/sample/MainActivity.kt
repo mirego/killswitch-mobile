@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         when (val localViewData = viewData.value) {
-                            is KillswitchViewData.Dialog -> CustomDialog(
+                            is KillswitchViewData -> CustomDialog(
                                 viewData = localViewData,
                                 dismiss = { viewData.value = null },
                                 navigateToUrl = { this@MainActivity.navigateToKillswitchUrl(it) }

@@ -25,7 +25,7 @@ import com.mirego.killswitch.viewmodel.KillswitchViewData
 
 @Composable
 fun CustomDialog(
-    viewData: KillswitchViewData.Dialog,
+    viewData: KillswitchViewData,
     dismiss: () -> Unit,
     navigateToUrl: (String) -> Unit
 ) {
@@ -107,10 +107,10 @@ private fun KillswitchButton(
 @Composable
 private fun Preview() {
     CustomDialog(
-        viewData = KillswitchViewData.Dialog(
-            "You must update to the latest version",
-            false,
-            listOf(
+        viewData = KillswitchViewData(
+            message = "You must update to the latest version",
+            isCancelable = false,
+            buttons = listOf(
                 KillswitchButtonViewData("Update", KillswitchButtonAction.NavigateToUrl("myapp.com"), KillswitchButtonType.POSITIVE),
                 KillswitchButtonViewData("Cancel", KillswitchButtonAction.Close, KillswitchButtonType.NEGATIVE)
             )

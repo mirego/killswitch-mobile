@@ -10,16 +10,16 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonViewData
 import com.mirego.killswitch.viewmodel.KillswitchViewData
 
 internal object Killswitch {
-    suspend fun engage(key: String, version: String, language: String): KillswitchViewData {
+    suspend fun engage(key: String, version: String, language: String): KillswitchViewData? {
         val response = Api.request(key, version, language)
         return when (response.action) {
-            Action.OK, null -> KillswitchViewData.None
+            Action.OK, null -> null
             Action.ALERT, Action.KILL -> createDialog(response)
         }
     }
 
-    private fun createDialog(response: Response): KillswitchViewData.Dialog =
-        KillswitchViewData.Dialog(
+    private fun createDialog(response: Response): KillswitchViewData =
+        KillswitchViewData(
             response.message.orEmpty(),
             response.action == Action.ALERT,
             response.buttons
