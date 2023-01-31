@@ -20,7 +20,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,23 +48,25 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Box(Modifier.fillMaxSize()) {
-                        val viewData = remember { mutableStateOf<KillswitchViewData?>(null) }
+                        var viewData by remember { mutableStateOf<KillswitchViewData?>(null) }
                         val scope = rememberCoroutineScope()
 
                         Content(
                             Modifier.run {
-                                if (viewData.value != null) blur(5.dp) else this
+                                if (viewData != null) blur(5.dp) else this
                             }
                         ) { key, version, language, customDialog ->
                             scope.launch {
-                                engage(key, version, language, customDialog, viewData, this@MainActivity)
+                                engage(key, version, language, customDialog, this@MainActivity) {
+                                    viewData = it
+                                }
                             }
                         }
 
-                        when (val localViewData = viewData.value) {
+                        when (val localViewData = viewData) {
                             is KillswitchViewData -> CustomDialog(
                                 viewData = localViewData,
-                                dismiss = { viewData.value = null },
+                                dismiss = { viewData = null },
                                 navigateToUrl = { this@MainActivity.navigateToKillswitchUrl(it) }
                             )
                             else -> Unit
@@ -82,13 +83,15 @@ private suspend fun engage(
     version: String,
     language: String,
     customDialog: Boolean,
-    viewData: MutableState<KillswitchViewData?>,
-    activity: Activity
+    activity: Activity,
+    onViewDataReceived: (KillswitchViewData) -> Unit
 ) {
     if (customDialog) {
-        viewData.value = AndroidKillswitch.engage(key, version, language)
+        AndroidKillswitch.engage(key, version, language)?.let {
+            onViewDataReceived(it)
+        }
     } else {
-        AndroidKillswitch.handleResponse(
+        AndroidKillswitch.showDialog(
             viewData = AndroidKillswitch.engage(key, version, language),
             activity = activity,
             themeResId = R.style.CustomAlertDialog

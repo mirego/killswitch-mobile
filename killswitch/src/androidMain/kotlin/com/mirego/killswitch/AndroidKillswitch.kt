@@ -13,7 +13,7 @@ object AndroidKillswitch {
     suspend fun engage(key: String, version: String, language: String) =
         Killswitch.engage(key, version, language)
 
-    fun handleResponse(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null) {
+    fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null) {
         viewData
             ?.createDialog(activity, themeResId)
             ?.show()
