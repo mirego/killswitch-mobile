@@ -3,15 +3,20 @@ package com.mirego.killswitch
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import androidx.annotation.StyleRes
 import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchViewData
+import java.util.Locale
 
 object AndroidKillswitch {
-    suspend fun engage(key: String, version: String, language: String) =
-        Killswitch.engage(key, version, language)
+    suspend fun engage(key: String, version: String, language: String, url: String) =
+        Killswitch.engage(key, version, language, url)
+
+    suspend fun engage(key: String, context: Context) =
+        Killswitch.engage(key, context.versionName, Locale.getDefault().language, context.getString(R.string.killswitch_url))
 
     fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null) {
         viewData

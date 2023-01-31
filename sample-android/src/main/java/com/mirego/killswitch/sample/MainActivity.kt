@@ -87,12 +87,12 @@ private suspend fun engage(
     onViewDataReceived: (KillswitchViewData) -> Unit
 ) {
     if (customDialog) {
-        AndroidKillswitch.engage(key, version, language)?.let {
+        AndroidKillswitch.engage(key, version, language, activity.getString(R.string.killswitch_url))?.let {
             onViewDataReceived(it)
         }
     } else {
         AndroidKillswitch.showDialog(
-            viewData = AndroidKillswitch.engage(key, version, language),
+            viewData = AndroidKillswitch.engage(key, version, language, activity.getString(R.string.killswitch_url)),
             activity = activity,
             themeResId = R.style.CustomAlertDialog
         )
