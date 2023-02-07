@@ -15,8 +15,8 @@ object AndroidKillswitch {
     suspend fun engage(key: String, version: String, language: String, url: String) =
         Killswitch.engage(key, version, language, url)
 
-    suspend fun engage(key: String, context: Context) =
-        Killswitch.engage(key, context.versionName, Locale.getDefault().language, context.getString(R.string.killswitch_url))
+    suspend fun engage(key: String, url: String, context: Context) =
+        Killswitch.engage(key, context.versionName, Locale.getDefault().language, url)
 
     fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null) {
         viewData
