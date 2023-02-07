@@ -55,9 +55,9 @@ class MainActivity : ComponentActivity() {
                             Modifier.run {
                                 if (viewData != null) blur(5.dp) else this
                             }
-                        ) { key, version, language, customDialog ->
+                        ) { url, key, version, language, customDialog ->
                             scope.launch {
-                                engage(key, version, language, customDialog, this@MainActivity) {
+                                engage(url, key, version, language, customDialog, this@MainActivity) {
                                     viewData = it
                                 }
                             }
@@ -79,6 +79,7 @@ class MainActivity : ComponentActivity() {
 }
 
 private suspend fun engage(
+    url: String,
     key: String,
     version: String,
     language: String,
@@ -87,12 +88,12 @@ private suspend fun engage(
     onViewDataReceived: (KillswitchViewData) -> Unit
 ) {
     if (customDialog) {
-        AndroidKillswitch.engage(key, version, language)?.let {
+        AndroidKillswitch.engage(key, version, language, url)?.let {
             onViewDataReceived(it)
         }
     } else {
         AndroidKillswitch.showDialog(
-            viewData = AndroidKillswitch.engage(key, version, language),
+            viewData = AndroidKillswitch.engage(key, version, language, url),
             activity = activity,
             themeResId = R.style.CustomAlertDialog
         )
@@ -100,7 +101,8 @@ private suspend fun engage(
 }
 
 @Composable
-private fun Content(modifier: Modifier = Modifier, engage: (String, String, String, Boolean) -> Unit) {
+private fun Content(modifier: Modifier = Modifier, engage: (String, String, String, String, Boolean) -> Unit) {
+    var url by remember { mutableStateOf("") }
     var key by remember { mutableStateOf("") }
     var version by remember { mutableStateOf("") }
     var language by remember { mutableStateOf("") }
@@ -118,6 +120,12 @@ private fun Content(modifier: Modifier = Modifier, engage: (String, String, Stri
             modifier = Modifier
                 .size(128.dp)
                 .align(Alignment.CenterHorizontally)
+        )
+        TextField(
+            value = url,
+            onValueChange = { url = it },
+            label = { Text("Url") },
+            modifier = Modifier.fillMaxWidth()
         )
         TextField(
             value = key,
@@ -141,7 +149,7 @@ private fun Content(modifier: Modifier = Modifier, engage: (String, String, Stri
             Text("Custom dialog")
             Checkbox(checked = customDialog, onCheckedChange = { customDialog = it })
         }
-        Button(onClick = { engage(key, version, language, customDialog) }) {
+        Button(onClick = { engage(url, key, version, language, customDialog) }) {
             Text("Engage")
         }
     }
@@ -151,6 +159,6 @@ private fun Content(modifier: Modifier = Modifier, engage: (String, String, Stri
 @Composable
 private fun Preview() {
     KillswitchSampleTheme {
-        Content { _, _, _, _ -> }
+        Content { _, _, _, _, _ -> }
     }
 }
