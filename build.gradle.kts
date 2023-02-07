@@ -1,6 +1,10 @@
 plugins {
-    id("com.android.library") version "7.4.0" apply false
+    id("com.android.library") version Versions.ANDROID_GRADLE_PLUGIN apply false
+    id("com.android.application") version Versions.ANDROID_GRADLE_PLUGIN apply false
+
+    kotlin("android") version Versions.KOTLIN apply false
     kotlin("multiplatform") version Versions.KOTLIN apply false
+
     id("org.jlleitschuh.gradle.ktlint") version Versions.KTLINT apply false
 
     id("mirego.release") version "2.0"

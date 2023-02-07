@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "killswitch-mobile"
-include(":killswitch", ":sample-android")
+include(":killswitch", ":sample:common", ":sample:android")

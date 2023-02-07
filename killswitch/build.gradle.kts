@@ -10,7 +10,13 @@ plugins {
 group = "com.mirego.killswitch-mobile"
 
 kotlin {
-    android()
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
+    }
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -83,6 +89,11 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 14
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 

@@ -1,47 +1,41 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    kotlin("android")
     id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
     namespace = "com.mirego.killswitch.sample"
-
+    compileSdk = 33
     defaultConfig {
-        compileSdk = 33
+        applicationId = "com.mirego.killswitch.sample"
         minSdk = 28
         targetSdk = 33
-
-        applicationId = "com.mirego.killswitch.sample"
         versionCode = 1
         versionName = "1.0"
     }
-
-    buildTypes {
-        release {
-            isDebuggable = true
-            isMinifyEnabled = false
-        }
-
-        debug {
-            isDebuggable = true
-            isMinifyEnabled = false
-        }
-    }
-
     buildFeatures {
         compose = true
     }
-
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.0"
+    }
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.0"
-    }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
         freeCompilerArgs = freeCompilerArgs +
@@ -52,7 +46,7 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":killswitch")))
+    implementation(project(":killswitch"))
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
