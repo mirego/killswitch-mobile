@@ -1,5 +1,6 @@
-package com.mirego.killswitch
+package com.mirego.killswitch.model
 
+import com.mirego.killswitch.httpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header

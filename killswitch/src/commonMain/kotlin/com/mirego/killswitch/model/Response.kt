@@ -1,9 +1,9 @@
-package com.mirego.killswitch
+package com.mirego.killswitch.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Response(
+internal data class Response(
     val action: Action?,
     val message: String?,
     val buttons: List<Button>?,

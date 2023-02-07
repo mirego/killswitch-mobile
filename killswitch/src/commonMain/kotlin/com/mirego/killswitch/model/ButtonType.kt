@@ -1,10 +1,10 @@
-package com.mirego.killswitch
+package com.mirego.killswitch.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ButtonType {
+internal enum class ButtonType {
     @SerialName("cancel")
     CANCEL,
 
