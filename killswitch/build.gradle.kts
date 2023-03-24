@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -39,7 +41,7 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.KTOR}")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
                 implementation("co.touchlab:kermit:1.2.2")
             }
@@ -52,7 +54,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-okhttp:${Versions.KTOR}")
-                implementation("androidx.annotation:annotation:1.5.0")
+                implementation("androidx.annotation:annotation:1.6.0")
             }
         }
         val androidTest by getting
