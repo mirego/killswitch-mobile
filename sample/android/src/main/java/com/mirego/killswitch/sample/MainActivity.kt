@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mirego.killswitch.AndroidKillswitch
+import com.mirego.killswitch.KillswitchException
 import com.mirego.killswitch.KillswitchListener
 import com.mirego.killswitch.navigateToKillswitchUrl
 import com.mirego.killswitch.sample.ui.theme.KillswitchSampleTheme
@@ -78,41 +79,56 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-private suspend fun engage(
-    url: String,
-    key: String,
-    version: String,
-    language: String,
-    customDialog: Boolean,
-    activity: Activity,
-    onViewDataReceived: (KillswitchViewData) -> Unit
-) {
-    if (customDialog) {
-        AndroidKillswitch.engage(key, version, language, url)?.let {
-            onViewDataReceived(it)
-        }
-    } else {
-        AndroidKillswitch.showDialog(
-            viewData = AndroidKillswitch.engage(key, version, language, url),
-            activity = activity,
-            themeResId = R.style.CustomAlertDialog,
-            object : KillswitchListener {
-                override fun onOk() {
-                    Log.d("tsst", "ok!")
+    private suspend fun engage(
+        url: String,
+        key: String,
+        version: String,
+        language: String,
+        customDialog: Boolean,
+        activity: Activity,
+        onViewDataReceived: (KillswitchViewData) -> Unit
+    ) {
+        if (customDialog) {
+            try {
+                AndroidKillswitch.engage(key, version, language, url)?.let {
+                    onViewDataReceived(it)
                 }
-
-                override fun onAlert() {
-                    Log.d("tsst", "alert")
-                }
-
-                override fun onKill() {
-                    Log.d("tsst", "kill")
-                }
-
+            } catch (e: KillswitchException) {
+                Log.e(TAG, "Killswitch exception", e)
             }
-        )
+        } else {
+            try {
+                AndroidKillswitch.showDialog(
+                    viewData = AndroidKillswitch.engage(key, version, language, url),
+                    activity = activity,
+                    themeResId = R.style.CustomAlertDialog,
+                    object : KillswitchListener {
+                        override fun onOk() {
+                            Log.d(TAG, "onOk")
+                        }
+
+                        override fun onAlert() {
+                            Log.d(TAG, "onAlert")
+                        }
+
+                        override fun onKill() {
+                            Log.d(TAG, "onKill")
+                        }
+
+                        override fun onDialogShown() {
+                            Log.d(TAG, "onDialogShown")
+                        }
+                    }
+                )
+            } catch (e: KillswitchException) {
+                Log.e(TAG, "Killswitch exception", e)
+            }
+        }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
 

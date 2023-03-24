@@ -10,11 +10,14 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchViewData
 import java.util.Locale
+import java.util.concurrent.CancellationException
 
 object AndroidKillswitch {
+    @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, version: String, language: String, url: String) =
         Killswitch.engage(key, version, language, url)
 
+    @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, url: String, context: Context) =
         Killswitch.engage(key, context.versionName, Locale.getDefault().language, url)
 
@@ -22,6 +25,7 @@ object AndroidKillswitch {
         viewData
             ?.createDialog(activity, themeResId, listener)
             ?.show()
+            ?.run { listener?.onDialogShown() }
             ?: run { listener?.onOk() }
     }
 }
