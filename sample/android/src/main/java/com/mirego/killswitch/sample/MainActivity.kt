@@ -2,6 +2,7 @@ package com.mirego.killswitch.sample
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mirego.killswitch.AndroidKillswitch
+import com.mirego.killswitch.KillswitchListener
 import com.mirego.killswitch.navigateToKillswitchUrl
 import com.mirego.killswitch.sample.ui.theme.KillswitchSampleTheme
 import com.mirego.killswitch.viewmodel.KillswitchViewData
@@ -95,7 +97,21 @@ private suspend fun engage(
         AndroidKillswitch.showDialog(
             viewData = AndroidKillswitch.engage(key, version, language, url),
             activity = activity,
-            themeResId = R.style.CustomAlertDialog
+            themeResId = R.style.CustomAlertDialog,
+            object : KillswitchListener {
+                override fun onOk() {
+                    Log.d("tsst", "ok!")
+                }
+
+                override fun onAlert() {
+                    Log.d("tsst", "alert")
+                }
+
+                override fun onKill() {
+                    Log.d("tsst", "kill")
+                }
+
+            }
         )
     }
 }

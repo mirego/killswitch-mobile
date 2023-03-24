@@ -18,35 +18,36 @@ object AndroidKillswitch {
     suspend fun engage(key: String, url: String, context: Context) =
         Killswitch.engage(key, context.versionName, Locale.getDefault().language, url)
 
-    fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null) {
+    fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null, listener: KillswitchListener? = null) {
         viewData
-            ?.createDialog(activity, themeResId)
+            ?.createDialog(activity, themeResId, listener)
             ?.show()
+            ?: run { listener?.onOk() }
     }
 }
 
-private fun KillswitchViewData.createDialog(activity: Activity, @StyleRes themeResId: Int?): Dialog {
+private fun KillswitchViewData.createDialog(activity: Activity, @StyleRes themeResId: Int?, listener: KillswitchListener?): Dialog {
     val builder = if (themeResId != null) AlertDialog.Builder(activity, themeResId) else AlertDialog.Builder(activity)
     val dialog = builder
         .setCancelable(false)
         .setMessage(message)
-        .setButtons(this, activity)
+        .setButtons(this, activity, listener)
         .create()
 
     dialog.setOnCancelListener {
-        executeCloseAction(dialog, this)
+        executeCloseAction(dialog, this, listener)
     }
 
     return dialog
 }
 
-private fun AlertDialog.Builder.setButtons(viewData: KillswitchViewData, activity: Activity): AlertDialog.Builder =
+private fun AlertDialog.Builder.setButtons(viewData: KillswitchViewData, activity: Activity, listener: KillswitchListener?): AlertDialog.Builder =
     apply {
         fun createOnClickListener(action: KillswitchButtonAction) = DialogInterface.OnClickListener { dialog, _ ->
             if (action is KillswitchButtonAction.NavigateToUrl) {
                 activity.navigateToKillswitchUrl(action.url)
             }
-            executeCloseAction(dialog, viewData)
+            executeCloseAction(dialog, viewData, listener)
         }
 
         viewData.buttons.forEach { button ->
@@ -59,10 +60,12 @@ private fun AlertDialog.Builder.setButtons(viewData: KillswitchViewData, activit
         }
     }
 
-private fun executeCloseAction(dialog: DialogInterface, viewData: KillswitchViewData) {
+private fun executeCloseAction(dialog: DialogInterface, viewData: KillswitchViewData, listener: KillswitchListener?) {
     if (viewData.isCancelable) {
         dialog.dismiss()
+        listener?.onAlert()
     } else {
+        listener?.onKill()
         ProcessUtils.kill()
     }
 }
