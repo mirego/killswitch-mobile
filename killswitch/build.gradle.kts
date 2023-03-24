@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
@@ -10,7 +12,13 @@ plugins {
 group = "com.mirego.killswitch-mobile"
 
 kotlin {
-    android()
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
+    }
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -33,7 +41,7 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.KTOR}")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
                 implementation("co.touchlab:kermit:1.2.2")
             }
@@ -46,7 +54,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-okhttp:${Versions.KTOR}")
-                implementation("androidx.annotation:annotation:1.5.0")
+                implementation("androidx.annotation:annotation:1.6.0")
             }
         }
         val androidTest by getting
@@ -83,6 +91,11 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 14
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
