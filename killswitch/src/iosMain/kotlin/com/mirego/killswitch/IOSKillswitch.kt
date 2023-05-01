@@ -122,8 +122,10 @@ class IOSKillswitch {
                             determineAlertDisplayState()
                             return@presentViewController
                         }
-                        storeViewController.loadProductWithParameters(mapOf(SKStoreProductParameterITunesItemIdentifier to storeNumber)) { result, _ ->
+                        println("Store number: $storeNumber")
+                        storeViewController.loadProductWithParameters(mapOf(SKStoreProductParameterITunesItemIdentifier to storeNumber)) { result, error ->
                             if (!result) {
+                                println("loadProductWithParameters failed: $error")
                                 determineAlertDisplayState()
                             }
                         }
@@ -150,10 +152,8 @@ class IOSKillswitch {
         private val topMostViewController: UIViewController?
             get() {
                 var topMost = rootViewController
-                val presentedViewController = topMost?.presentedViewController
-
-                while (presentedViewController != null) {
-                    topMost = presentedViewController
+                while (topMost?.presentedViewController != null) {
+                    topMost = topMost.presentedViewController
                 }
 
                 return topMost
