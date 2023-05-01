@@ -25,8 +25,14 @@ class IOSKillswitch {
     suspend fun engage(key: String, version: String, language: String, url: String) =
         Killswitch.engage(key, version, language, url)
 
-    fun showDialog(viewData: KillswitchViewData?) {
-        IOSKillswitchViewController().showDialog(viewData)
+    fun showDialog(viewData: KillswitchViewData?, listener: KillswitchListener?) {
+        IOSKillswitchViewController().showDialog(viewData, listener)
+
+        if (viewData == null) {
+            listener?.onOk()
+        } else {
+            listener?.onDialogShown()
+        }
     }
 
     private class IOSKillswitchViewController : UIViewController(null, null), SKStoreProductViewControllerDelegateProtocol, UIAdaptivePresentationControllerDelegateProtocol {
@@ -34,12 +40,12 @@ class IOSKillswitch {
         private val storePrefix = "store:"
 
         private var viewData: KillswitchViewData? = null
-        var delegate: IOSKillswitchDelegate? = null
+        private var listener: KillswitchListener? = null
 
         private fun shouldHideAlertAfterButtonAction() =
             viewData?.isCancelable == true
 
-        private fun hideAlertWithCompletion(completion: (() -> Unit)?) {
+        private fun hideAlertWithCompletion(completion: (() -> Unit)? = null) {
             val topMostViewController = topMostViewController
             if (topMostViewController is IOSKillswitchViewController || topMostViewController is SKStoreProductViewController) {
                 topMostViewController.presentingViewController?.dismissViewControllerAnimated(true) {
@@ -48,10 +54,6 @@ class IOSKillswitch {
                     if (newTopMostViewController is IOSKillswitchViewController) {
                         hideAlertWithCompletion(completion)
                     } else {
-                        if (shouldHideAlertAfterButtonAction()) {
-                            delegate?.alertDidHide()
-                        }
-
                         completion?.invoke()
                     }
                 }
@@ -76,8 +78,9 @@ class IOSKillswitch {
             determineAlertDisplayState()
         }
 
-        fun showDialog(viewData: KillswitchViewData?) {
+        fun showDialog(viewData: KillswitchViewData?, listener: KillswitchListener?) {
             this.viewData = viewData ?: return
+            this.listener = listener
 
             hideAlertWithCompletion {
                 val alertController = UIAlertController.alertControllerWithTitle("", viewData.message, UIAlertControllerStyleAlert)
@@ -96,13 +99,17 @@ class IOSKillswitch {
                     )
                 }
 
-                topMostViewController?.presentViewController(alertController, true) {
-                    delegate?.alertDidShow()
-                }
+                topMostViewController?.presentViewController(alertController, true, null)
             }
         }
 
         private fun performActionForButton(button: KillswitchButtonViewData) {
+            if (shouldHideAlertAfterButtonAction()) {
+                listener?.onAlert()
+            } else {
+                listener?.onKill()
+            }
+
             when (val action = button.action) {
                 KillswitchButtonAction.Close -> determineAlertDisplayState()
                 is KillswitchButtonAction.NavigateToUrl -> if (action.url.startsWith(storePrefix)) {
@@ -126,15 +133,16 @@ class IOSKillswitch {
                     NSURL.URLWithString(action.url)?.let {
                         UIApplication.sharedApplication.openURL(it)
                     }
+                    determineAlertDisplayState()
                 }
             }
         }
 
         private fun determineAlertDisplayState() {
             if (shouldHideAlertAfterButtonAction()) {
-                hideAlertWithCompletion {}
+                hideAlertWithCompletion()
             } else {
-                showDialog(viewData)
+                showDialog(viewData, listener)
             }
         }
 
