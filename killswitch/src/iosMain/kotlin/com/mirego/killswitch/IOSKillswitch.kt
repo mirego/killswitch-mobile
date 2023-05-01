@@ -31,6 +31,8 @@ class IOSKillswitch {
 
     private class IOSKillswitchViewController : UIViewController(null, null), SKStoreProductViewControllerDelegateProtocol, UIAdaptivePresentationControllerDelegateProtocol {
 
+        private val storePrefix = "store:"
+
         private var viewData: KillswitchViewData? = null
         var delegate: IOSKillswitchDelegate? = null
 
@@ -42,7 +44,7 @@ class IOSKillswitch {
             if (topMostViewController is IOSKillswitchViewController || topMostViewController is SKStoreProductViewController) {
                 topMostViewController.presentingViewController?.dismissViewControllerAnimated(true) {
                     val newTopMostViewController = topMostViewController
-                    
+
                     if (newTopMostViewController is IOSKillswitchViewController) {
                         hideAlertWithCompletion(completion)
                     } else {
@@ -80,7 +82,7 @@ class IOSKillswitch {
             hideAlertWithCompletion {
                 val alertController = UIAlertController.alertControllerWithTitle("", viewData.message, UIAlertControllerStyleAlert)
 
-                viewData.buttons.sortedBy { it.type.displayOrder }.forEach { button ->
+                viewData.buttons.forEach { button ->
                     alertController.addAction(
                         UIAlertAction.actionWithTitle(
                             button.title,
@@ -103,14 +105,14 @@ class IOSKillswitch {
         private fun performActionForButton(button: KillswitchButtonViewData) {
             when (val action = button.action) {
                 KillswitchButtonAction.Close -> determineAlertDisplayState()
-                is KillswitchButtonAction.NavigateToUrl -> if (action.url.startsWith(STORE_PREFIX)) {
+                is KillswitchButtonAction.NavigateToUrl -> if (action.url.startsWith(storePrefix)) {
                     val storeViewController = SKStoreProductViewController()
 
                     storeViewController.delegate = this
                     storeViewController.presentationController?.delegate = this
 
                     topMostViewController?.presentViewController(storeViewController, animated = true) {
-                        val storeNumber = action.url.substring(STORE_PREFIX.length).toLongOrNull() ?: run {
+                        val storeNumber = action.url.substring(storePrefix.length).toLongOrNull() ?: run {
                             determineAlertDisplayState()
                             return@presentViewController
                         }
@@ -153,9 +155,5 @@ class IOSKillswitch {
                 val sceneDelegate = scene?.delegate as? UIWindowSceneDelegateProtocol
                 return sceneDelegate?.window?.rootViewController ?: UIApplication.sharedApplication.keyWindow?.rootViewController
             }
-
-        companion object {
-            private const val STORE_PREFIX = "store:"
-        }
     }
 }
