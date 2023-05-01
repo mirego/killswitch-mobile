@@ -31,8 +31,6 @@ class IOSKillswitch {
 
     private class IOSKillswitchViewController : UIViewController(null, null), SKStoreProductViewControllerDelegateProtocol, UIAdaptivePresentationControllerDelegateProtocol {
 
-        private val storePrefix = "store:"
-
         private var viewData: KillswitchViewData? = null
         var delegate: IOSKillswitchDelegate? = null
 
@@ -41,17 +39,14 @@ class IOSKillswitch {
 
         private fun hideAlertWithCompletion(completion: (() -> Unit)?) {
             val topMostViewController = topMostViewController
-            println("topMostViewController: $topMostViewController")
             if (topMostViewController is IOSKillswitchViewController || topMostViewController is SKStoreProductViewController) {
-                println("dismissViewControllerAnimated")
                 topMostViewController.presentingViewController?.dismissViewControllerAnimated(true) {
                     val newTopMostViewController = topMostViewController
+                    
                     if (newTopMostViewController is IOSKillswitchViewController) {
-                        println("hideAlertWithCompletion")
                         hideAlertWithCompletion(completion)
                     } else {
                         if (shouldHideAlertAfterButtonAction()) {
-                            println("alertDidHide")
                             delegate?.alertDidHide()
                         }
 
@@ -76,12 +71,7 @@ class IOSKillswitch {
         }
 
         override fun presentationControllerDidDismiss(presentationController: UIPresentationController) {
-            println("presentationControllerDidDismiss")
             determineAlertDisplayState()
-        }
-
-        override fun presentationControllerDidAttemptToDismiss(presentationController: UIPresentationController) {
-            println("presentationControllerDidAttemptToDismiss")
         }
 
         fun showDialog(viewData: KillswitchViewData?) {
@@ -113,20 +103,19 @@ class IOSKillswitch {
         private fun performActionForButton(button: KillswitchButtonViewData) {
             when (val action = button.action) {
                 KillswitchButtonAction.Close -> determineAlertDisplayState()
-                is KillswitchButtonAction.NavigateToUrl -> if (action.url.startsWith(storePrefix)) {
+                is KillswitchButtonAction.NavigateToUrl -> if (action.url.startsWith(STORE_PREFIX)) {
                     val storeViewController = SKStoreProductViewController()
+
                     storeViewController.delegate = this
                     storeViewController.presentationController?.delegate = this
+
                     topMostViewController?.presentViewController(storeViewController, animated = true) {
-                        val storeNumber = action.url.substring(storePrefix.length).toLongOrNull() ?: run {
-                            println("Wrong store number")
+                        val storeNumber = action.url.substring(STORE_PREFIX.length).toLongOrNull() ?: run {
                             determineAlertDisplayState()
                             return@presentViewController
                         }
-                        println("Store number: $storeNumber")
-                        storeViewController.loadProductWithParameters(mapOf(SKStoreProductParameterITunesItemIdentifier to storeNumber)) { result, error ->
+                        storeViewController.loadProductWithParameters(mapOf(SKStoreProductParameterITunesItemIdentifier to storeNumber)) { result, _ ->
                             if (!result) {
-                                println("loadProductWithParameters failed: $error")
                                 determineAlertDisplayState()
                             }
                         }
@@ -140,12 +129,9 @@ class IOSKillswitch {
         }
 
         private fun determineAlertDisplayState() {
-            println("determineAlertDisplayState")
             if (shouldHideAlertAfterButtonAction()) {
-                println("hideAlertWithCompletion")
                 hideAlertWithCompletion {}
             } else {
-                println("viewData: $viewData")
                 showDialog(viewData)
             }
         }
@@ -153,6 +139,7 @@ class IOSKillswitch {
         private val topMostViewController: UIViewController?
             get() {
                 var topMost = rootViewController
+
                 while (topMost?.presentedViewController != null) {
                     topMost = topMost.presentedViewController
                 }
@@ -164,8 +151,11 @@ class IOSKillswitch {
             get() {
                 val scene = UIApplication.sharedApplication.connectedScenes.firstOrNull() as? UIWindowScene
                 val sceneDelegate = scene?.delegate as? UIWindowSceneDelegateProtocol
-                val sceneRootViewController = sceneDelegate?.window?.rootViewController
-                return sceneRootViewController ?: UIApplication.sharedApplication.keyWindow?.rootViewController
+                return sceneDelegate?.window?.rootViewController ?: UIApplication.sharedApplication.keyWindow?.rootViewController
             }
+
+        companion object {
+            private const val STORE_PREFIX = "store:"
+        }
     }
 }
