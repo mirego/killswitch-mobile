@@ -118,7 +118,8 @@ class IOSKillswitch {
                     storeViewController.delegate = this
                     storeViewController.presentationController?.delegate = this
                     topMostViewController?.presentViewController(storeViewController, animated = true) {
-                        val storeNumber = action.url.substring(storePrefix.length).toIntOrNull() ?: run {
+                        val storeNumber = action.url.substring(storePrefix.length).toLongOrNull() ?: run {
+                            println("Wrong store number")
                             determineAlertDisplayState()
                             return@presentViewController
                         }
