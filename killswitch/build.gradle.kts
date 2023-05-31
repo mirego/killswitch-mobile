@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.kotlin.plugin.serialization)
-    id("org.jlleitschuh.gradle.ktlint")
-    id("mirego.publish")
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.mirego.publish)
 }
 
 group = "com.mirego.killswitch-mobile"
@@ -42,6 +42,8 @@ kotlin {
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
+
+                implementation(libs.kermit)
             }
         }
         val commonTest by getting {
@@ -94,6 +96,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 

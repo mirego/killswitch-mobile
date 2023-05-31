@@ -5,10 +5,10 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.native.cocoapods) apply false
 
-    id("org.jlleitschuh.gradle.ktlint") version Versions.KTLINT apply false
+    alias(libs.plugins.ktlint) apply false
 
-    id("mirego.release") version "2.0"
-    id("mirego.publish") version "1.0"
+    alias(libs.plugins.mirego.publish)
+    alias(libs.plugins.mirego.release)
 }
 
 tasks.register("clean", Delete::class) {
