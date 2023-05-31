@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.application) apply false
-
-    kotlin("android") version Versions.KOTLIN apply false
-    kotlin("multiplatform") version Versions.KOTLIN apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.native.cocoapods) apply false
 
     id("org.jlleitschuh.gradle.ktlint") version Versions.KTLINT apply false
 

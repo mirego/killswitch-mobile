@@ -1,10 +1,10 @@
 @file:Suppress("UNUSED_VARIABLE")
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("com.android.library")
-    kotlin("plugin.serialization") version Versions.KOTLIN
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.native.cocoapods)
+    alias(libs.plugins.kotlin.plugin.serialization)
     id("org.jlleitschuh.gradle.ktlint")
     id("mirego.publish")
 }
