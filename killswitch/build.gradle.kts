@@ -36,14 +36,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
-                implementation("io.ktor:ktor-client-content-negotiation:${Versions.KTOR}")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.KTOR}")
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-
-                implementation("co.touchlab:kermit:1.2.2")
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
         val commonTest by getting {
@@ -53,8 +51,8 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp:${Versions.KTOR}")
-                implementation("androidx.annotation:annotation:1.6.0")
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.androidx.annotation)
             }
         }
         val androidTest by getting
@@ -67,7 +65,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:${Versions.KTOR}")
+                implementation(libs.ktor.client.darwin)
             }
         }
         val iosX64Test by getting

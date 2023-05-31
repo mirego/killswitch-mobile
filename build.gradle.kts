@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library") version Versions.ANDROID_GRADLE_PLUGIN apply false
-    id("com.android.application") version Versions.ANDROID_GRADLE_PLUGIN apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.application) apply false
 
     kotlin("android") version Versions.KOTLIN apply false
     kotlin("multiplatform") version Versions.KOTLIN apply false
