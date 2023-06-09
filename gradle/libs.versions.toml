@@ -1,0 +1,60 @@
+[versions]
+activity = "1.7.2"
+androidGradlePlugin = "8.0.2"
+androidJunit = "1.1.5"
+annotation = "1.6.0"
+composeBom = "2023.05.01"
+composeCompiler = "1.4.7"
+composeUtils = "1.0.1-dev30"
+coroutines = "1.6.4"
+espresso = "3.5.1"
+junit = "4.13.2"
+kermit = "1.2.2"
+kotlin = "1.8.21"
+kotlinxSerialization = "1.5.0"
+ktlint = "11.0.0"
+ktor = "2.3.0"
+ktx = "1.10.1"
+lifecycle = "2.6.1"
+miregoPublish = "1.0"
+miregoRelease = "2.0"
+
+[libraries]
+androidx-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidJunit" }
+
+compose-utils = { group = "com.mirego.compose", name = "utils", version.ref = "composeUtils" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
+
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+
+mirego-publish = { id = "mirego.publish", version.ref = "miregoPublish" }
+mirego-release = { id = "mirego.release", version.ref = "miregoRelease" }
+
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

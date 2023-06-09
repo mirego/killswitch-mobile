@@ -1,14 +1,14 @@
 plugins {
-    id("com.android.library") version Versions.ANDROID_GRADLE_PLUGIN apply false
-    id("com.android.application") version Versions.ANDROID_GRADLE_PLUGIN apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.native.cocoapods) apply false
 
-    kotlin("android") version Versions.KOTLIN apply false
-    kotlin("multiplatform") version Versions.KOTLIN apply false
+    alias(libs.plugins.ktlint) apply false
 
-    id("org.jlleitschuh.gradle.ktlint") version Versions.KTLINT apply false
-
-    id("mirego.release") version "2.0"
-    id("mirego.publish") version "1.0"
+    alias(libs.plugins.mirego.publish)
+    alias(libs.plugins.mirego.release)
 }
 
 tasks.register("clean", Delete::class) {
