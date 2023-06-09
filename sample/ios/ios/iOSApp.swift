@@ -54,10 +54,12 @@ struct iOSApp: App {
                             IOSKillswitch().showDialog(viewData: viewData, listener: Listener())
                         }
                         catch {
+                            print("Killswitch error: \(error)")
                         }
                     }
                 }
             }
+            .padding(32)
         }
     }
 }
