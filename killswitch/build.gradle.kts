@@ -1,12 +1,10 @@
-@file:Suppress("UNUSED_VARIABLE")
-
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("com.android.library")
-    kotlin("plugin.serialization") version Versions.KOTLIN
-    id("org.jlleitschuh.gradle.ktlint")
-    id("mirego.publish")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.native.cocoapods)
+    alias(libs.plugins.kotlin.plugin.serialization)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.mirego.publish)
 }
 
 group = "com.mirego.killswitch-mobile"
@@ -15,7 +13,7 @@ kotlin {
     android {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "11"
+                jvmTarget = "17"
             }
         }
     }
@@ -36,12 +34,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-core:${Versions.KTOR}")
-                implementation("io.ktor:ktor-client-content-negotiation:${Versions.KTOR}")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.KTOR}")
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
         val commonTest by getting {
@@ -51,8 +49,8 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp:${Versions.KTOR}")
-                implementation("androidx.annotation:annotation:1.6.0")
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.androidx.annotation)
             }
         }
         val androidTest by getting
@@ -65,7 +63,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:${Versions.KTOR}")
+                implementation(libs.ktor.client.darwin)
             }
         }
         val iosX64Test by getting
@@ -92,8 +90,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
