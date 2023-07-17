@@ -40,8 +40,6 @@ kotlin {
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
-
-                implementation(libs.kermit)
             }
         }
         val commonTest by getting {

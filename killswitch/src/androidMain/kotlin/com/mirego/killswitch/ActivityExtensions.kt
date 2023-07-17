@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 
 fun Activity.navigateToKillswitchUrl(url: String?) {
     val uri = Uri.parse(url)
@@ -19,6 +20,8 @@ fun Activity.navigateToKillswitchUrl(url: String?) {
                 startActivity(browserIntent)
             }
         } catch (_: ActivityNotFoundException) {
+        } catch (e: UnsupportedOperationException) {
+            Log.e(this::class.simpleName, "Unable to parse Killswitch URL", e)
         }
     }
 }

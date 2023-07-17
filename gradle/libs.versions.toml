@@ -9,7 +9,6 @@ composeUtils = "1.0.1-dev30"
 coroutines = "1.6.4"
 espresso = "3.5.1"
 junit = "4.13.2"
-kermit = "1.2.2"
 kotlin = "1.8.21"
 kotlinxSerialization = "1.5.0"
 ktlint = "11.0.0"
@@ -31,8 +30,6 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 compose-utils = { group = "com.mirego.compose", name = "utils", version.ref = "composeUtils" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-
-kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
