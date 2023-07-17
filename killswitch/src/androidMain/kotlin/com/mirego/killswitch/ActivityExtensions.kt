@@ -6,8 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 
-private const val TAG = "ActivityExtensions.kt"
-
 fun Activity.navigateToKillswitchUrl(url: String?) {
     val uri = Uri.parse(url)
 
@@ -23,7 +21,7 @@ fun Activity.navigateToKillswitchUrl(url: String?) {
             }
         } catch (_: ActivityNotFoundException) {
         } catch (e: UnsupportedOperationException) {
-            Log.e(TAG, "Unable to parse Killswitch URL", e)
+            Log.e(this::class.simpleName, "Unable to parse Killswitch URL", e)
         }
     }
 }
