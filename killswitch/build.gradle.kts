@@ -10,7 +10,7 @@ plugins {
 group = "com.mirego.killswitch-mobile"
 
 kotlin {
-    android {
+    androidTarget {
         compilations.all {
             kotlinOptions {
                 jvmTarget = "17"
@@ -53,7 +53,7 @@ kotlin {
                 implementation(libs.androidx.annotation)
             }
         }
-        val androidTest by getting
+        val androidUnitTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
@@ -84,7 +84,7 @@ kotlin.sourceSets.all {
 
 android {
     namespace = "com.mirego.killswitch"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         minSdk = 14
     }
