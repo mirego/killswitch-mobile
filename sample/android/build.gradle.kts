@@ -7,12 +7,20 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/mathieularue/Code/killswitch-mobile/sample/android/keystores/release")
+            storePassword = "0#c>M4>T094r"
+            keyAlias = "release"
+            keyPassword = "0#c>M4>T094r"
+        }
+    }
     namespace = "com.mirego.killswitch.sample"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "com.mirego.killswitch.sample"
         minSdk = 28
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
     }
@@ -30,6 +38,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
