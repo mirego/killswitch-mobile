@@ -4,7 +4,11 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchButtonViewData
 import com.mirego.killswitch.viewmodel.KillswitchViewData
+import platform.Foundation.NSLocale
+import platform.Foundation.NSLocaleLanguageCode
 import platform.Foundation.NSURL
+import platform.Foundation.componentsFromLocaleIdentifier
+import platform.Foundation.preferredLanguages
 import platform.StoreKit.SKStoreProductParameterITunesItemIdentifier
 import platform.StoreKit.SKStoreProductViewController
 import platform.StoreKit.SKStoreProductViewControllerDelegateProtocol
@@ -22,8 +26,18 @@ import platform.UIKit.UIWindowSceneDelegateProtocol
 import platform.UIKit.presentationController
 
 class IOSKillswitch {
-    suspend fun engage(key: String, version: String, language: String, url: String) =
+    suspend fun engage(key: String, version: String, language: String, url: String): KillswitchViewData? =
         Killswitch.engage(key, version, language, url)
+
+    suspend fun engage(key: String, version: String): KillswitchViewData? {
+        val localeIdentifier: String = NSLocale.preferredLanguages[0] as String
+        val components = NSLocale.componentsFromLocaleIdentifier(localeIdentifier)
+        val language = components[NSLocaleLanguageCode] as String
+
+        return Killswitch.engage(key, version, language, DEFAULT_URL)
+    }
+
+    fun showDialog(viewData: KillswitchViewData?) = showDialog(viewData, null)
 
     fun showDialog(viewData: KillswitchViewData?, listener: KillswitchListener?) {
         IOSKillswitchViewController().showDialog(viewData, listener)
@@ -33,6 +47,10 @@ class IOSKillswitch {
         } else {
             listener?.onDialogShown()
         }
+    }
+
+    companion object {
+        private const val DEFAULT_URL = "https://killswitch.mirego.com/killswitch"
     }
 
     private class IOSKillswitchViewController : UIViewController(null, null), SKStoreProductViewControllerDelegateProtocol, UIAdaptivePresentationControllerDelegateProtocol {
