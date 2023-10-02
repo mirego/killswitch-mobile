@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.native.cocoapods)
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.mirego.publish)
+    alias(libs.plugins.mirego.release)
+    `maven-publish`
 }
 
 group = "com.mirego.killswitch-mobile"
@@ -16,20 +17,11 @@ kotlin {
                 jvmTarget = "17"
             }
         }
+        publishLibraryVariants("release")
     }
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-
-    cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
-        version = "1.0"
-        ios.deploymentTarget = "14.1"
-        framework {
-            baseName = "killswitch"
-        }
-    }
 
     sourceSets {
         val commonMain by getting {
@@ -93,22 +85,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                artifactId = "killswitch"
-            }
-        }
-    }
+release {
+    checkTasks = listOf("check")
+    buildTasks = listOf("publish")
 }
