@@ -12,9 +12,9 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal object Killswitch {
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, version: String, language: String, url: String): KillswitchViewData? =
+    suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
         try {
-            Api.request(key, version, language, url)?.let { response ->
+            Api.request(key, version, url, language)?.let { response ->
                 response.error?.takeIf { it.isNotEmpty() }?.let { error ->
                     throw KillswitchException(error)
                 }
@@ -48,6 +48,4 @@ internal object Killswitch {
                 }
                 .orEmpty()
         )
-
-    internal const val DEFAULT_URL = "https://killswitch.mirego.com/killswitch"
 }

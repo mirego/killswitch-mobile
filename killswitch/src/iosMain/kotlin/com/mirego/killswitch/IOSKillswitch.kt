@@ -29,12 +29,12 @@ class IOSKillswitch {
     suspend fun engage(key: String, version: String, language: String, url: String): KillswitchViewData? =
         Killswitch.engage(key, version, language, url)
 
-    suspend fun engage(key: String, version: String): KillswitchViewData? {
+    suspend fun engage(key: String, version: String, url: String): KillswitchViewData? {
         val localeIdentifier: String = NSLocale.preferredLanguages[0] as String
         val components = NSLocale.componentsFromLocaleIdentifier(localeIdentifier)
         val language = components[NSLocaleLanguageCode] as String
 
-        return Killswitch.engage(key, version, language, Killswitch.DEFAULT_URL)
+        return Killswitch.engage(key, version, url, language)
     }
 
     fun showDialog(viewData: KillswitchViewData?) = showDialog(viewData, null)

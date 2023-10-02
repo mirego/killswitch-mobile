@@ -14,12 +14,12 @@ import java.util.concurrent.CancellationException
 
 object AndroidKillswitch {
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, version: String, language: String, url: String) =
-        Killswitch.engage(key, version, language, url)
+    suspend fun engage(key: String, context: Context, url: String, language: String = Locale.getDefault().language) =
+        Killswitch.engage(key, context.versionName, language, url)
 
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(context: Context, key: String, url: String = Killswitch.DEFAULT_URL) =
-        Killswitch.engage(key, context.versionName, Locale.getDefault().language, url)
+    suspend fun engage(key: String, version: String, url: String, language: String = Locale.getDefault().language) =
+        Killswitch.engage(key, version, language, url)
 
     fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null, listener: KillswitchListener? = null) {
         viewData
