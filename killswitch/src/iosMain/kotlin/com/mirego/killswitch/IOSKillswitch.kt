@@ -34,7 +34,7 @@ class IOSKillswitch {
         val components = NSLocale.componentsFromLocaleIdentifier(localeIdentifier)
         val language = components[NSLocaleLanguageCode] as String
 
-        return Killswitch.engage(key, version, language, DEFAULT_URL)
+        return Killswitch.engage(key, version, language, Killswitch.DEFAULT_URL)
     }
 
     fun showDialog(viewData: KillswitchViewData?) = showDialog(viewData, null)
@@ -47,10 +47,6 @@ class IOSKillswitch {
         } else {
             listener?.onDialogShown()
         }
-    }
-
-    companion object {
-        private const val DEFAULT_URL = "https://killswitch.mirego.com/killswitch"
     }
 
     private class IOSKillswitchViewController : UIViewController(null, null), SKStoreProductViewControllerDelegateProtocol, UIAdaptivePresentationControllerDelegateProtocol {

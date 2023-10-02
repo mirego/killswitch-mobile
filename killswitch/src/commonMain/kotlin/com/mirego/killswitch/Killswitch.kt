@@ -48,4 +48,6 @@ internal object Killswitch {
                 }
                 .orEmpty()
         )
+
+    internal const val DEFAULT_URL = "https://killswitch.mirego.com/killswitch"
 }
