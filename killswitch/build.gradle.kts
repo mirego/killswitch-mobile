@@ -90,4 +90,5 @@ android {
 release {
     checkTasks = listOf("check")
     buildTasks = listOf("publish")
+    updateVersionPart = 2
 }
