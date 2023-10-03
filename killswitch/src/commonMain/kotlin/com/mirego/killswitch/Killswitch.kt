@@ -14,7 +14,12 @@ internal object Killswitch {
     @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
         try {
-            Api.request(key, version, url, language)?.let { response ->
+            Api.request(
+                key = key,
+                version = version,
+                url = url,
+                language = language
+            )?.let { response ->
                 response.error?.takeIf { it.isNotEmpty() }?.let { error ->
                     throw KillswitchException(error)
                 }
