@@ -1,7 +1,10 @@
 <div align="center">
   <img src="https://user-images.githubusercontent.com/11348/151395659-3ebe29b6-b1d6-44fa-bb44-c42146c7e99a.png" width="563" />
   <p><strong>Killswitch</strong> is a clever control panel built by <a href="https://www.mirego.com">Mirego</a> that allows mobile developers to apply<br /> runtime version-specific behaviors to their iOS or Android application.</p>
-  <br /><br />
+  <br />
+  <a href="https://github.com/mirego/killswitch-mobile/actions/workflows/ci.yaml"><img src="https://github.com/mirego/killswitch-mobile/actions/workflows/ci.yaml/badge.svg"/></a>
+  <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin"/></a>
+  <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg"/></a>
 </div>
 
 ## License
