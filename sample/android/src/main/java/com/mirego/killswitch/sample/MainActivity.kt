@@ -91,7 +91,12 @@ class MainActivity : ComponentActivity() {
     ) {
         if (customDialog) {
             try {
-                AndroidKillswitch.engage(key, version, language, url)?.let {
+                AndroidKillswitch.engage(
+                    key = key,
+                    version = version,
+                    url = url,
+                    language = language
+                )?.let {
                     onViewDataReceived(it)
                 }
             } catch (e: KillswitchException) {
@@ -100,7 +105,12 @@ class MainActivity : ComponentActivity() {
         } else {
             try {
                 AndroidKillswitch.showDialog(
-                    viewData = AndroidKillswitch.engage(key, version, language, url),
+                    viewData = AndroidKillswitch.engage(
+                        key = key,
+                        version = version,
+                        url = url,
+                        language = language
+                    ),
                     activity = activity,
                     themeResId = R.style.CustomAlertDialog,
                     object : KillswitchListener {
