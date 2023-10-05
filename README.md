@@ -91,6 +91,23 @@ Task {
 
 ### Custom UI
 
+On Android somewhere in the root view of your application, you can do something like this.
+
+```kotlin
+var viewData by remember { mutableStateOf<KillswitchViewData?>(null) }
+
+when (val localViewData = viewData) {
+    is KillswitchViewData -> CustomDialog(
+        viewData = localViewData,
+        dismiss = { viewData = null },
+        navigateToUrl = this@MainActivity::navigateToKillswitchUrl
+    )
+    else -> MainView()
+}
+```
+
+You can find a sample CustomDialog view [here](sample/android/src/main/java/com/mirego/killswitch/sample/CustomDialog.kt)
+
 ## License
 
 Killswitch is © 2013-2023 [Mirego](https://www.mirego.com) and may be freely distributed under the [New BSD license](http://opensource.org/licenses/BSD-3-Clause). See the [`LICENSE.md`](https://github.com/mirego/killswitch/blob/main/LICENSE.md) file.

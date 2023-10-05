@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
                             is KillswitchViewData -> CustomDialog(
                                 viewData = localViewData,
                                 dismiss = { viewData = null },
-                                navigateToUrl = { this@MainActivity.navigateToKillswitchUrl(it) }
+                                navigateToUrl = this@MainActivity::navigateToKillswitchUrl
                             )
                             else -> Unit
                         }
