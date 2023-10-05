@@ -57,6 +57,40 @@ kotlin.native.binary.objcExportSuspendFunctionLaunchThreadRestriction=none
 ```
 Reference: https://youtrack.jetbrains.com/issue/KT-51297/Native-allow-calling-Kotlin-suspend-functions-on-non-main-thread-from-Swift
 
+## Usage
+
+There is two ways of using the Killswitch: by letting the library display a native dialog or by implementing custom UI.
+
+### Native dialog
+
+On Android in the `onCreate()` function of your main Activity you can engage the Killswitch and let the library handle the response in order to display the native dialog.
+
+```kotlin
+lifecycleScope.launch {
+    AndroidKillswitch.showDialog(
+        AndroidKillswitch.engage(KILLSWITCH_API_KEY, this@MainActivity, KILLSWITCH_URL),
+        this@MainActivity,
+        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert
+    )
+}
+```
+
+On iOS you can do the same thing in the `application()` function of your AppDelegate
+```swift
+Task {
+    do {
+        let viewData = try await IOSKillswitch().engage(key: KILLSWITCH_API_KEY, url: KILLSWITCH_URL)
+        DispatchQueue.main.async {
+            IOSKillswitch().showDialog(viewData: viewData)
+        }
+    } catch {
+        print("Killswitch error: \(error)")
+    }
+}
+```
+
+### Custom UI
+
 ## License
 
 Killswitch is © 2013-2023 [Mirego](https://www.mirego.com) and may be freely distributed under the [New BSD license](http://opensource.org/licenses/BSD-3-Clause). See the [`LICENSE.md`](https://github.com/mirego/killswitch/blob/main/LICENSE.md) file.
