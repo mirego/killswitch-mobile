@@ -4,6 +4,7 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchButtonViewData
 import com.mirego.killswitch.viewmodel.KillswitchViewData
+import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
 import platform.Foundation.NSLocaleLanguageCode
 import platform.Foundation.NSURL
@@ -26,16 +27,31 @@ import platform.UIKit.UIWindowSceneDelegateProtocol
 import platform.UIKit.presentationController
 
 class IOSKillswitch {
-    suspend fun engage(key: String, version: String, language: String, url: String): KillswitchViewData? =
-        Killswitch.engage(key, version, language, url)
+    suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
+        Killswitch.engage(
+            key = key,
+            version = version,
+            url = url,
+            language = language
+        )
 
-    suspend fun engage(key: String, version: String, url: String): KillswitchViewData? {
-        val localeIdentifier: String = NSLocale.preferredLanguages[0] as String
-        val components = NSLocale.componentsFromLocaleIdentifier(localeIdentifier)
-        val language = components[NSLocaleLanguageCode] as String
+    suspend fun engage(key: String, url: String): KillswitchViewData? =
+        Killswitch.engage(
+            key = key,
+            version = version,
+            url = url,
+            language = language
+        )
 
-        return Killswitch.engage(key, version, url, language)
-    }
+    private val language: String
+        get() {
+            val localeIdentifier: String = NSLocale.preferredLanguages[0].toString()
+            val components = NSLocale.componentsFromLocaleIdentifier(localeIdentifier)
+            return components[NSLocaleLanguageCode].toString()
+        }
+
+    private val version: String
+        get() = NSBundle.mainBundle.infoDictionary?.get("CFBundleShortVersionString")?.toString().orEmpty()
 
     fun showDialog(viewData: KillswitchViewData?) = showDialog(viewData, null)
 
