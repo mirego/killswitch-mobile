@@ -7,6 +7,56 @@
   <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg"/></a>
 </div>
 
+## Setup
+
+The library is published to Mirego's public Maven repository, so make sure you have it included in your settings.gradle.kts `dependencyResolutionManagement` block.
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        // ...
+        maven("https://s3.amazonaws.com/mirego-maven/public")
+    }
+}
+```
+
+You can then add the dependency to your common source set dependencies in your build.gradle.kts.
+
+```kotlin
+commonMain {
+    dependencies {
+        // ...
+        api("com.mirego.killswitch-mobile:killswitch:x.y.z")
+    }
+}
+```
+
+To make the code available on iOS, don't forget to export the library in the framework.
+
+```kotlin
+kotlin {
+    androidTarget()
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries {
+            framework {
+                // ...
+                export("com.mirego.killswitch-mobile:killswitch:x.y.z")
+            }
+        }
+    }
+}
+```
+
+On iOS, if the Killswitch is engaged from another thread than the main one, you may need to add this line in your project's gradle.properties to prevent your app from crashing.
+```groovy
+kotlin.native.binary.objcExportSuspendFunctionLaunchThreadRestriction=none
+```
+Reference: https://youtrack.jetbrains.com/issue/KT-51297/Native-allow-calling-Kotlin-suspend-functions-on-non-main-thread-from-Swift
+
 ## License
 
 Killswitch is © 2013-2023 [Mirego](https://www.mirego.com) and may be freely distributed under the [New BSD license](http://opensource.org/licenses/BSD-3-Clause). See the [`LICENSE.md`](https://github.com/mirego/killswitch/blob/main/LICENSE.md) file.
