@@ -35,7 +35,7 @@ struct MainView: View {
                 Button("Engage") {
                     Task {
                         do {
-                            let viewData = try await IOSKillswitch().engage(key: key, version: version, language: language, url: url)
+                            let viewData = try await IOSKillswitch().engage(key: key, version: version, url: url, language: language)
                             
                             class Listener : KillswitchListener {
                                 func onAlert() {
