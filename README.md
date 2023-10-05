@@ -59,11 +59,15 @@ Reference: https://youtrack.jetbrains.com/issue/KT-51297/Native-allow-calling-Ko
 
 ## Usage
 
-There is two ways of using the Killswitch: by letting the library display a native dialog or by implementing custom UI.
+There is two ways of using the Killswitch: by letting the library display a native dialog or by implementing a custom UI.
 
 ### Native dialog
 
-On Android in the `onCreate()` function of your main Activity you can engage the Killswitch and let the library handle the response in order to display the native dialog.
+With this approach it is easy to display a native dialog on the launch of your app.
+
+#### Android
+
+In the `onCreate()` function of your main `Activity`, you can engage the Killswitch in a `CoroutineScope` and let the library handle the response in order to display the native dialog.
 
 ```kotlin
 lifecycleScope.launch {
@@ -75,7 +79,9 @@ lifecycleScope.launch {
 }
 ```
 
-On iOS you can do the same thing in the `application()` function of your AppDelegate
+#### iOS
+
+In the `application()` function of your `AppDelegate`, you can engage the Killswitch in a `Task` and let the library handle the response in order to display the native dialog.
 ```swift
 Task {
     do {
@@ -91,7 +97,11 @@ Task {
 
 ### Custom UI
 
-On Android somewhere in the root view of your application, you can do something like this.
+With this approach you are free to customize the Killswitch UI and UX the way you want. It could either occupy the whole screen with an opaque background, or be displayed on top of the main view with some alpha.
+
+#### Android
+
+In the root view of your application, you can engage the Killswitch inside a `LaunchedEffect` and decide which view to display depending on the state of the view data.
 
 ```kotlin
 var viewData by remember { mutableStateOf<KillswitchViewData?>(null) }
@@ -104,9 +114,47 @@ when (val localViewData = viewData) {
     )
     else -> MainView()
 }
+
+val lifecycleOwner = LocalLifecycleOwner.current
+val context = LocalContext.current
+
+LaunchedEffect(true) {
+    lifecycleOwner.lifecycle.coroutineScope.launch {
+        viewData = AndroidKillswitch.engage(KILLSWITCH_API_KEY, context, KILLSWITCH_URL)
+    }
+}
 ```
 
-You can find a sample CustomDialog view [here](sample/android/src/main/java/com/mirego/killswitch/sample/CustomDialog.kt)
+You can find a sample CustomDialog Compose view [here](sample/android/src/main/java/com/mirego/killswitch/sample/CustomDialog.kt).
+
+#### iOS
+
+In the root view of your application, you can engage the Killswitch inside a `task` modifier and decide which view to display depending on the state of the view data.
+
+```swift
+    @State private var viewData: KillswitchViewData? = nil
+    
+    var body: some View {
+        ZStack {
+            if let viewData = viewData {
+                CustomDialog(viewData: viewData) {
+                    self.viewData = nil
+                }
+            } else {
+                MainView()
+            }
+        }
+        .task {
+            do {
+                self.viewData = try await IOSKillswitch().engage(key: KILLSWITCH_API_KEY, url: KILLSWITCH_URL)
+            } catch {
+                print("Killswitch error: \(error)")
+            }
+        }
+    }
+```
+
+You can find a sample CustomDialog SwiftUI view [here](sample/ios/ios/CustomDialog.swift).
 
 ## License
 
