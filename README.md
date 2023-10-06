@@ -71,11 +71,15 @@ In the `onCreate()` function of your main `Activity`, you can engage the Killswi
 
 ```kotlin
 lifecycleScope.launch {
-    AndroidKillswitch.showDialog(
-        AndroidKillswitch.engage(KILLSWITCH_API_KEY, this@MainActivity, KILLSWITCH_URL),
-        this@MainActivity,
-        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert
-    )
+    try {
+        AndroidKillswitch.showDialog(
+            AndroidKillswitch.engage(KILLSWITCH_API_KEY, this@MainActivity, KILLSWITCH_URL),
+            this@MainActivity,
+            android.R.style.Theme_DeviceDefault_Light_Dialog_Alert
+        )
+    } catch (e: KillswitchException) {
+        Log.e(TAG, "Killswitch exception", e)
+    }
 }
 ```
 
@@ -120,7 +124,11 @@ val context = LocalContext.current
 
 LaunchedEffect(true) {
     lifecycleOwner.lifecycle.coroutineScope.launch {
-        viewData = AndroidKillswitch.engage(KILLSWITCH_API_KEY, context, KILLSWITCH_URL)
+        try {
+            viewData = AndroidKillswitch.engage(KILLSWITCH_API_KEY, context, KILLSWITCH_URL)
+        } catch (e: KillswitchException) {
+            Log.e(TAG, "Killswitch exception", e)
+        }
     }
 }
 ```
