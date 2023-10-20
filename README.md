@@ -7,6 +7,10 @@
   <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg"/></a>
 </div>
 
+## What is Killswitch?
+
+[Killswitch is a clever control panel](https://github.com/mirego/killswitch) built by Mirego that allows mobile developers to apply runtime version-specific behaviors to their iOS or Android application.
+
 ## Setup
 
 The library is published to Mirego's public Maven repository, so make sure you have it included in your settings.gradle.kts `dependencyResolutionManagement` block.
@@ -52,9 +56,11 @@ kotlin {
 ```
 
 On iOS, if the Killswitch is engaged from another thread than the main one, you may need to add this line in your project's gradle.properties to prevent your app from crashing.
+
 ```groovy
 kotlin.native.binary.objcExportSuspendFunctionLaunchThreadRestriction=none
 ```
+
 Reference: https://youtrack.jetbrains.com/issue/KT-51297/Native-allow-calling-Kotlin-suspend-functions-on-non-main-thread-from-Swift
 
 ## Usage
@@ -86,6 +92,7 @@ lifecycleScope.launch {
 #### iOS
 
 In the `application()` function of your `AppDelegate`, you can engage the Killswitch in a `Task` and let the library handle the response in order to display the native dialog.
+
 ```swift
 Task {
     do {
@@ -140,26 +147,26 @@ You can find a sample CustomDialog Compose view [here](sample/android/src/main/j
 In the root view of your application, you can engage the Killswitch inside a `task` modifier and decide which view to display depending on the state of the view data.
 
 ```swift
-    @State private var viewData: KillswitchViewData? = nil
-    
-    var body: some View {
-        ZStack {
-            if let viewData = viewData {
-                CustomDialog(viewData: viewData) {
-                    self.viewData = nil
-                }
-            } else {
-                MainView()
+@State private var viewData: KillswitchViewData? = nil
+
+var body: some View {
+    ZStack {
+        if let viewData = viewData {
+            CustomDialog(viewData: viewData) {
+                self.viewData = nil
             }
-        }
-        .task {
-            do {
-                self.viewData = try await IOSKillswitch().engage(key: KILLSWITCH_API_KEY, url: KILLSWITCH_URL)
-            } catch {
-                print("Killswitch error: \(error)")
-            }
+        } else {
+            MainView()
         }
     }
+    .task {
+        do {
+            self.viewData = try await IOSKillswitch().engage(key: KILLSWITCH_API_KEY, url: KILLSWITCH_URL)
+        } catch {
+            print("Killswitch error: \(error)")
+        }
+    }
+}
 ```
 
 You can find a sample CustomDialog SwiftUI view [here](sample/ios/ios/CustomDialog.swift).
