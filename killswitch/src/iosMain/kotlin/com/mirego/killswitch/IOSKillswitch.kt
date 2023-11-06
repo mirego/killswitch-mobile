@@ -25,8 +25,10 @@ import platform.UIKit.UIViewController
 import platform.UIKit.UIWindowScene
 import platform.UIKit.UIWindowSceneDelegateProtocol
 import platform.UIKit.presentationController
+import kotlin.coroutines.cancellation.CancellationException
 
 class IOSKillswitch {
+    @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
         Killswitch.engage(
             key = key,
@@ -35,6 +37,7 @@ class IOSKillswitch {
             language = language
         )
 
+    @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, url: String): KillswitchViewData? =
         Killswitch.engage(
             key = key,
