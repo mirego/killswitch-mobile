@@ -4,6 +4,7 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchButtonViewData
 import com.mirego.killswitch.viewmodel.KillswitchViewData
+import kotlin.coroutines.cancellation.CancellationException
 import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
 import platform.Foundation.NSLocaleLanguageCode
@@ -25,7 +26,6 @@ import platform.UIKit.UIViewController
 import platform.UIKit.UIWindowScene
 import platform.UIKit.UIWindowSceneDelegateProtocol
 import platform.UIKit.presentationController
-import kotlin.coroutines.cancellation.CancellationException
 
 class IOSKillswitch {
     @Throws(KillswitchException::class, CancellationException::class)
