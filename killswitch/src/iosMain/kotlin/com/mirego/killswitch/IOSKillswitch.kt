@@ -4,6 +4,7 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchButtonViewData
 import com.mirego.killswitch.viewmodel.KillswitchViewData
+import kotlin.coroutines.cancellation.CancellationException
 import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
 import platform.Foundation.NSLocaleLanguageCode
@@ -27,6 +28,7 @@ import platform.UIKit.UIWindowSceneDelegateProtocol
 import platform.UIKit.presentationController
 
 class IOSKillswitch {
+    @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
         Killswitch.engage(
             key = key,
@@ -35,6 +37,7 @@ class IOSKillswitch {
             language = language
         )
 
+    @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(key: String, url: String): KillswitchViewData? =
         Killswitch.engage(
             key = key,
