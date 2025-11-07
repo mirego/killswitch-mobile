@@ -25,6 +25,8 @@ kotlin {
         podfile = project.file("../ios/Podfile")
         framework {
             baseName = "common"
+            @Suppress("OPT_IN_USAGE")
+            transitiveExport = true
             export(project(":killswitch"))
         }
     }
