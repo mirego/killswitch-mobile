@@ -53,12 +53,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             KillswitchSampleTheme {
                 Scaffold(
-                    contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.systemBars)
+                    contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.systemBars),
                 ) { contentPadding ->
                     Box(
                         Modifier
                             .padding(contentPadding)
-                            .fillMaxSize()
+                            .fillMaxSize(),
                     ) {
                         var viewData by remember { mutableStateOf<KillswitchViewData?>(null) }
                         val scope = rememberCoroutineScope()
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         Content(
                             modifier = Modifier
                                 .systemBarsPadding()
-                                .run { if (viewData != null) blur(5.dp) else this }
+                                .run { if (viewData != null) blur(5.dp) else this },
                         ) { url, key, version, language, customDialog ->
                             scope.launch {
                                 engage(url, key, version, language, customDialog, this@MainActivity) {
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             is KillswitchViewData -> CustomDialog(
                                 viewData = localViewData,
                                 dismiss = { viewData = null },
-                                navigateToUrl = this@MainActivity::navigateToKillswitchUrl
+                                navigateToUrl = this@MainActivity::navigateToKillswitchUrl,
                             )
                             else -> Unit
                         }
@@ -96,7 +96,7 @@ class MainActivity : ComponentActivity() {
         language: String,
         customDialog: Boolean,
         activity: Activity,
-        onViewDataReceived: (KillswitchViewData) -> Unit
+        onViewDataReceived: (KillswitchViewData) -> Unit,
     ) {
         if (customDialog) {
             try {
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     key = key,
                     version = version,
                     url = url,
-                    language = language
+                    language = language,
                 )?.let {
                     onViewDataReceived(it)
                 }
@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         key = key,
                         version = version,
                         url = url,
-                        language = language
+                        language = language,
                     ),
                     activity = activity,
                     themeResId = R.style.CustomAlertDialog,
@@ -138,7 +138,7 @@ class MainActivity : ComponentActivity() {
                         override fun onDialogShown() {
                             Log.d(TAG, "onDialogShown")
                         }
-                    }
+                    },
                 )
             } catch (e: KillswitchException) {
                 Log.e(TAG, "Killswitch exception", e)
@@ -152,7 +152,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Content(modifier: Modifier = Modifier, engage: (String, String, String, String, Boolean) -> Unit) {
+private fun Content(
+    modifier: Modifier = Modifier,
+    engage: (String, String, String, String, Boolean) -> Unit,
+) {
     var url by remember { mutableStateOf("") }
     var key by remember { mutableStateOf("") }
     var version by remember { mutableStateOf("") }
@@ -163,38 +166,38 @@ private fun Content(modifier: Modifier = Modifier, engage: (String, String, Stri
         modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Image(
             painter = painterResource(R.mipmap.ic_launcher_foreground),
             contentDescription = null,
             modifier = Modifier
                 .size(128.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
         )
         TextField(
             value = url,
             onValueChange = { url = it },
             label = { Text("Url") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = key,
             onValueChange = { key = it },
             label = { Text("Key") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = version,
             onValueChange = { version = it },
             label = { Text("Version") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = language,
             onValueChange = { language = it },
             label = { Text("Language") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("Custom dialog")
