@@ -9,7 +9,12 @@ import io.ktor.client.request.parameter
 internal object Api {
     private val client = httpClient()
 
-    suspend fun request(key: String, version: String, url: String, language: String): Response? =
+    suspend fun request(
+        key: String,
+        version: String,
+        url: String,
+        language: String,
+    ): Response? =
         client
             .get(url) {
                 header("Accept-Language", language)

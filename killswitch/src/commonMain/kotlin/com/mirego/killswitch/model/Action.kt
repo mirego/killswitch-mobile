@@ -12,5 +12,5 @@ enum class Action {
     ALERT,
 
     @SerialName("kill")
-    KILL
+    KILL,
 }

@@ -27,7 +27,7 @@ import com.mirego.killswitch.viewmodel.KillswitchViewData
 fun CustomDialog(
     viewData: KillswitchViewData,
     dismiss: () -> Unit,
-    navigateToUrl: (String) -> Unit
+    navigateToUrl: (String) -> Unit,
 ) {
     Box(
         Modifier
@@ -37,12 +37,12 @@ fun CustomDialog(
                 if (viewData.isCancelable) {
                     dismiss()
                 }
-            }
+            },
     ) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(viewData.message, color = Color.White)
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -51,7 +51,7 @@ fun CustomDialog(
                         viewData = button,
                         isCancelable = viewData.isCancelable,
                         dismiss = dismiss,
-                        navigateToUrl = navigateToUrl
+                        navigateToUrl = navigateToUrl,
                     )
                 }
             }
@@ -69,7 +69,7 @@ private fun KillswitchButton(
     viewData: KillswitchButtonViewData,
     isCancelable: Boolean,
     dismiss: () -> Unit,
-    navigateToUrl: (String) -> Unit
+    navigateToUrl: (String) -> Unit,
 ) {
     val closeAction = if (isCancelable) {
         { dismiss() }
@@ -96,8 +96,8 @@ private fun KillswitchButton(
             containerColor = when (viewData.type) {
                 KillswitchButtonType.POSITIVE -> MaterialTheme.colorScheme.primary
                 KillswitchButtonType.NEGATIVE -> MaterialTheme.colorScheme.secondary
-            }
-        )
+            },
+        ),
     ) {
         Text(viewData.title)
     }
@@ -112,10 +112,10 @@ private fun Preview() {
             isCancelable = false,
             buttons = listOf(
                 KillswitchButtonViewData("Update", KillswitchButtonAction.NavigateToUrl("myapp.com"), KillswitchButtonType.POSITIVE),
-                KillswitchButtonViewData("Cancel", KillswitchButtonAction.Close, KillswitchButtonType.NEGATIVE)
-            )
+                KillswitchButtonViewData("Cancel", KillswitchButtonAction.Close, KillswitchButtonType.NEGATIVE),
+            ),
         ),
         dismiss = {},
-        navigateToUrl = {}
+        navigateToUrl = {},
     )
 }

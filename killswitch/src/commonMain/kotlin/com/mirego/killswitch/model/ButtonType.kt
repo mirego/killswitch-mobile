@@ -9,5 +9,5 @@ internal enum class ButtonType {
     CANCEL,
 
     @SerialName("url")
-    URL
+    URL,
 }
