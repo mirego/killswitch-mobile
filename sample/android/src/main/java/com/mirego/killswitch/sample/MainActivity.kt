@@ -16,8 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -46,11 +45,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KillswitchSampleTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Box(Modifier.fillMaxSize()) {
+                Scaffold { contentPadding ->
+                    Box(
+                        Modifier
+                            .padding(contentPadding)
+                            .fillMaxSize()
+                    ) {
                         var viewData by remember { mutableStateOf<KillswitchViewData?>(null) }
                         val scope = rememberCoroutineScope()
 

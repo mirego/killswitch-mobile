@@ -1,20 +1,16 @@
 [versions]
-activity = "1.7.2"
-androidGradlePlugin = "8.1.2"
-androidJunit = "1.1.5"
-annotation = "1.7.0"
-composeBom = "2023.09.02"
-composeCompiler = "1.5.3"
-composeUtils = "1.0.1-dev47"
-coroutines = "1.7.1"
-espresso = "3.5.1"
-junit = "4.13.2"
-kotlin = "1.9.10"
-kotlinxSerialization = "1.6.0"
-ktlint = "11.0.0"
-ktor = "2.3.7"
-ktx = "1.12.0"
-lifecycle = "2.6.2"
+activity = "1.11.0"
+androidGradlePlugin = "8.13.0"
+annotation = "1.9.1"
+composeBom = "2025.11.00"
+composeUtils = "1.0.1-dev48"
+coroutines = "1.10.2"
+kotlin = "2.2.10"
+kotlinxSerialization = "1.9.0"
+ktlint = "13.1.0"
+ktor = "3.3.2"
+ktx = "1.17.0"
+lifecycle = "2.9.4"
 miregoPublish = "1.0"
 miregoRelease = "2.0"
 
@@ -24,12 +20,12 @@ androidx-annotation = { group = "androidx.annotation", name = "annotation", vers
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidJunit" }
 
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-utils = { group = "com.mirego.compose", name = "utils", version.ref = "composeUtils" }
-
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -43,12 +39,10 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 mirego-publish = { id = "mirego.publish", version.ref = "miregoPublish" }
 mirego-release = { id = "mirego.release", version.ref = "miregoRelease" }
-
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
