@@ -2,7 +2,7 @@
   <img src="https://github.com/mirego/killswitch-mobile/assets/11348/2210c092-6640-46d1-b2ce-e70dc0510754" width="600" />
   <p><strong>Killswitch</strong> is a clever control panel built by <a href="https://www.mirego.com">Mirego</a> that allows mobile developers to apply<br /> runtime version-specific behaviors to their iOS or Android application.</p>
   <a href="https://github.com/mirego/killswitch-mobile/actions/workflows/ci.yaml"><img src="https://github.com/mirego/killswitch-mobile/actions/workflows/ci.yaml/badge.svg"/></a>
-  <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin"/></a>
+  <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/kotlin-2.2.10-blue.svg?logo=kotlin"/></a>
   <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg"/></a>
 </div>
 
@@ -172,7 +172,7 @@ You can find a sample CustomDialog SwiftUI view [here](sample/ios/ios/CustomDial
 
 ## License
 
-Killswitch is © 2013-2023 [Mirego](https://www.mirego.com) and may be freely distributed under the [New BSD license](http://opensource.org/licenses/BSD-3-Clause). See the [`LICENSE.md`](https://github.com/mirego/killswitch/blob/main/LICENSE.md) file.
+Killswitch is © 2013-2025 [Mirego](https://www.mirego.com) and may be freely distributed under the [New BSD license](http://opensource.org/licenses/BSD-3-Clause). See the [`LICENSE.md`](https://github.com/mirego/killswitch/blob/main/LICENSE.md) file.
 
 The shield logo is based on [this lovely icon by Kimmi Studio](https://thenounproject.com/icon/shield-1055246/), from The Noun Project. Used under a [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/) license.
 

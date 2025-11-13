@@ -14,24 +14,37 @@ import java.util.concurrent.CancellationException
 
 object AndroidKillswitch {
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, context: Context, url: String, language: String = Locale.getDefault().language) =
-        Killswitch.engage(
-            key = key,
-            version = context.versionName,
-            url = url,
-            language = language
-        )
+    suspend fun engage(
+        key: String,
+        context: Context,
+        url: String,
+        language: String = Locale.getDefault().language,
+    ) = Killswitch.engage(
+        key = key,
+        version = context.versionName,
+        url = url,
+        language = language,
+    )
 
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, version: String, url: String, language: String = Locale.getDefault().language) =
-        Killswitch.engage(
-            key = key,
-            version = version,
-            url = url,
-            language = language
-        )
+    suspend fun engage(
+        key: String,
+        version: String,
+        url: String,
+        language: String = Locale.getDefault().language,
+    ) = Killswitch.engage(
+        key = key,
+        version = version,
+        url = url,
+        language = language,
+    )
 
-    fun showDialog(viewData: KillswitchViewData?, activity: Activity, @StyleRes themeResId: Int? = null, listener: KillswitchListener? = null) {
+    fun showDialog(
+        viewData: KillswitchViewData?,
+        activity: Activity,
+        @StyleRes themeResId: Int? = null,
+        listener: KillswitchListener? = null,
+    ) {
         viewData
             ?.createDialog(activity, themeResId, listener)
             ?.show()
@@ -40,7 +53,11 @@ object AndroidKillswitch {
     }
 }
 
-private fun KillswitchViewData.createDialog(activity: Activity, @StyleRes themeResId: Int?, listener: KillswitchListener?): Dialog {
+private fun KillswitchViewData.createDialog(
+    activity: Activity,
+    @StyleRes themeResId: Int?,
+    listener: KillswitchListener?,
+): Dialog {
     val builder = if (themeResId != null) AlertDialog.Builder(activity, themeResId) else AlertDialog.Builder(activity)
     val dialog = builder
         .setCancelable(false)
@@ -55,14 +72,19 @@ private fun KillswitchViewData.createDialog(activity: Activity, @StyleRes themeR
     return dialog
 }
 
-private fun AlertDialog.Builder.setButtons(viewData: KillswitchViewData, activity: Activity, listener: KillswitchListener?): AlertDialog.Builder =
+private fun AlertDialog.Builder.setButtons(
+    viewData: KillswitchViewData,
+    activity: Activity,
+    listener: KillswitchListener?,
+): AlertDialog.Builder =
     apply {
-        fun createOnClickListener(action: KillswitchButtonAction) = DialogInterface.OnClickListener { dialog, _ ->
-            if (action is KillswitchButtonAction.NavigateToUrl) {
-                activity.navigateToKillswitchUrl(action.url)
+        fun createOnClickListener(action: KillswitchButtonAction) =
+            DialogInterface.OnClickListener { dialog, _ ->
+                if (action is KillswitchButtonAction.NavigateToUrl) {
+                    activity.navigateToKillswitchUrl(action.url)
+                }
+                executeCloseAction(dialog, viewData, listener)
             }
-            executeCloseAction(dialog, viewData, listener)
-        }
 
         viewData.buttons.forEach { button ->
             val clickListener = createOnClickListener(button.action)
@@ -74,7 +96,11 @@ private fun AlertDialog.Builder.setButtons(viewData: KillswitchViewData, activit
         }
     }
 
-private fun executeCloseAction(dialog: DialogInterface, viewData: KillswitchViewData, listener: KillswitchListener?) {
+private fun executeCloseAction(
+    dialog: DialogInterface,
+    viewData: KillswitchViewData,
+    listener: KillswitchListener?,
+) {
     if (viewData.isCancelable) {
         dialog.dismiss()
         listener?.onAlert()

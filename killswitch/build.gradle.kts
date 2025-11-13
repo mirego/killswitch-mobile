@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
@@ -12,10 +14,8 @@ group = "com.mirego.killswitch-mobile"
 
 kotlin {
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
         }
         publishLibraryVariants("release")
     }
@@ -24,7 +24,7 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
@@ -34,49 +34,29 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
             }
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.androidx.annotation)
             }
         }
-        val androidUnitTest by getting
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
+        iosMain {
             dependencies {
                 implementation(libs.ktor.client.darwin)
             }
         }
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        val iosTest by creating {
-            dependsOn(commonTest)
-            iosX64Test.dependsOn(this)
-            iosArm64Test.dependsOn(this)
-            iosSimulatorArm64Test.dependsOn(this)
-        }
     }
-}
 
-kotlin.sourceSets.all {
-    languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+    compilerOptions {
+        optIn.addAll(
+            "kotlinx.serialization.ExperimentalSerializationApi",
+        )
+    }
 }
 
 android {
     namespace = "com.mirego.killswitch"
-    compileSdk = 34
+    compileSdk = 36
     defaultConfig {
         minSdk = 14
     }

@@ -8,5 +8,6 @@ captures
 .cxx
 local.properties
 xcuserdata
+.kotlin
 
 Pods/

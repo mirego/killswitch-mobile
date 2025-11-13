@@ -7,12 +7,12 @@ internal data class Response(
     val action: Action?,
     val message: String?,
     val buttons: List<Button>?,
-    val error: String?
+    val error: String?,
 ) {
     @Serializable
     data class Button(
         val type: ButtonType,
         val label: String,
-        val url: String?
+        val url: String?,
     )
 }

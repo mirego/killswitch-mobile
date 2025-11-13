@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
@@ -6,10 +8,8 @@ plugins {
 
 kotlin {
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
         }
     }
     iosX64()
@@ -21,51 +21,28 @@ kotlin {
         homepage = "www.mirego.com"
         license = "BSD-3"
         version = "1.0"
-        ios.deploymentTarget = "14.1"
+        ios.deploymentTarget = "15.0"
         podfile = project.file("../ios/Podfile")
         framework {
             baseName = "common"
+            @Suppress("OPT_IN_USAGE")
             transitiveExport = true
             export(project(":killswitch"))
         }
     }
     
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(project(":killswitch"))
             }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-        val androidMain by getting
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-        }
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        val iosTest by creating {
-            dependsOn(commonTest)
-            iosX64Test.dependsOn(this)
-            iosArm64Test.dependsOn(this)
-            iosSimulatorArm64Test.dependsOn(this)
         }
     }
 }
 
 android {
     namespace = "com.mirego.killswitch.sample"
-    compileSdk = 33
+    compileSdk = 36
     defaultConfig {
         minSdk = 26
     }

@@ -5,19 +5,24 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -42,22 +47,26 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         setContent {
             KillswitchSampleTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Box(Modifier.fillMaxSize()) {
+                Scaffold(
+                    contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.systemBars),
+                ) { contentPadding ->
+                    Box(
+                        Modifier
+                            .padding(contentPadding)
+                            .fillMaxSize(),
+                    ) {
                         var viewData by remember { mutableStateOf<KillswitchViewData?>(null) }
                         val scope = rememberCoroutineScope()
 
                         Content(
-                            Modifier.run {
-                                if (viewData != null) blur(5.dp) else this
-                            }
+                            modifier = Modifier
+                                .systemBarsPadding()
+                                .run { if (viewData != null) blur(5.dp) else this },
                         ) { url, key, version, language, customDialog ->
                             scope.launch {
                                 engage(url, key, version, language, customDialog, this@MainActivity) {
@@ -70,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             is KillswitchViewData -> CustomDialog(
                                 viewData = localViewData,
                                 dismiss = { viewData = null },
-                                navigateToUrl = this@MainActivity::navigateToKillswitchUrl
+                                navigateToUrl = this@MainActivity::navigateToKillswitchUrl,
                             )
                             else -> Unit
                         }
@@ -87,7 +96,7 @@ class MainActivity : ComponentActivity() {
         language: String,
         customDialog: Boolean,
         activity: Activity,
-        onViewDataReceived: (KillswitchViewData) -> Unit
+        onViewDataReceived: (KillswitchViewData) -> Unit,
     ) {
         if (customDialog) {
             try {
@@ -95,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     key = key,
                     version = version,
                     url = url,
-                    language = language
+                    language = language,
                 )?.let {
                     onViewDataReceived(it)
                 }
@@ -109,7 +118,7 @@ class MainActivity : ComponentActivity() {
                         key = key,
                         version = version,
                         url = url,
-                        language = language
+                        language = language,
                     ),
                     activity = activity,
                     themeResId = R.style.CustomAlertDialog,
@@ -129,7 +138,7 @@ class MainActivity : ComponentActivity() {
                         override fun onDialogShown() {
                             Log.d(TAG, "onDialogShown")
                         }
-                    }
+                    },
                 )
             } catch (e: KillswitchException) {
                 Log.e(TAG, "Killswitch exception", e)
@@ -143,7 +152,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Content(modifier: Modifier = Modifier, engage: (String, String, String, String, Boolean) -> Unit) {
+private fun Content(
+    modifier: Modifier = Modifier,
+    engage: (String, String, String, String, Boolean) -> Unit,
+) {
     var url by remember { mutableStateOf("") }
     var key by remember { mutableStateOf("") }
     var version by remember { mutableStateOf("") }
@@ -154,38 +166,38 @@ private fun Content(modifier: Modifier = Modifier, engage: (String, String, Stri
         modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Image(
             painter = painterResource(R.mipmap.ic_launcher_foreground),
             contentDescription = null,
             modifier = Modifier
                 .size(128.dp)
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
         )
         TextField(
             value = url,
             onValueChange = { url = it },
             label = { Text("Url") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = key,
             onValueChange = { key = it },
             label = { Text("Key") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = version,
             onValueChange = { version = it },
             label = { Text("Version") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         TextField(
             value = language,
             onValueChange = { language = it },
             label = { Text("Language") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("Custom dialog")

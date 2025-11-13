@@ -29,21 +29,29 @@ import platform.UIKit.presentationController
 
 class IOSKillswitch {
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
+    suspend fun engage(
+        key: String,
+        version: String,
+        url: String,
+        language: String,
+    ): KillswitchViewData? =
         Killswitch.engage(
             key = key,
             version = version,
             url = url,
-            language = language
+            language = language,
         )
 
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, url: String): KillswitchViewData? =
+    suspend fun engage(
+        key: String,
+        url: String,
+    ): KillswitchViewData? =
         Killswitch.engage(
             key = key,
             version = version,
             url = url,
-            language = language
+            language = language,
         )
 
     private val language: String
@@ -58,7 +66,10 @@ class IOSKillswitch {
 
     fun showDialog(viewData: KillswitchViewData?) = showDialog(viewData, null)
 
-    fun showDialog(viewData: KillswitchViewData?, listener: KillswitchListener?) {
+    fun showDialog(
+        viewData: KillswitchViewData?,
+        listener: KillswitchListener?,
+    ) {
         IOSKillswitchViewController().showDialog(viewData, listener)
 
         if (viewData == null) {
@@ -69,14 +80,12 @@ class IOSKillswitch {
     }
 
     private class IOSKillswitchViewController : UIViewController(null, null), SKStoreProductViewControllerDelegateProtocol, UIAdaptivePresentationControllerDelegateProtocol {
-
         private val storePrefix = "store:"
 
         private var viewData: KillswitchViewData? = null
         private var listener: KillswitchListener? = null
 
-        private fun shouldHideAlertAfterButtonAction() =
-            viewData?.isCancelable == true
+        private fun shouldHideAlertAfterButtonAction() = viewData?.isCancelable == true
 
         private fun hideAlertWithCompletion(completion: (() -> Unit)? = null) {
             val topMostViewController = topMostViewController
@@ -95,7 +104,11 @@ class IOSKillswitch {
             }
         }
 
-        override fun presentViewController(viewControllerToPresent: UIViewController, animated: Boolean, completion: (() -> Unit)?) {
+        override fun presentViewController(
+            viewControllerToPresent: UIViewController,
+            animated: Boolean,
+            completion: (() -> Unit)?,
+        ) {
             throw IllegalStateException("Trying to present a view controller on top of the Killswitch: $viewControllerToPresent")
         }
 
@@ -111,7 +124,10 @@ class IOSKillswitch {
             determineAlertDisplayState()
         }
 
-        fun showDialog(viewData: KillswitchViewData?, listener: KillswitchListener?) {
+        fun showDialog(
+            viewData: KillswitchViewData?,
+            listener: KillswitchListener?,
+        ) {
             this.viewData = viewData ?: return
             this.listener = listener
 
@@ -125,10 +141,10 @@ class IOSKillswitch {
                             when (button.type) {
                                 KillswitchButtonType.POSITIVE -> UIAlertActionStyleDefault
                                 KillswitchButtonType.NEGATIVE -> UIAlertActionStyleCancel
-                            }
+                            },
                         ) {
                             performActionForButton(button)
-                        }
+                        },
                     )
                 }
 

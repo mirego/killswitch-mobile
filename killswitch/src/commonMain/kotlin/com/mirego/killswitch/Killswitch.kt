@@ -12,13 +12,18 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal object Killswitch {
     @Throws(KillswitchException::class, CancellationException::class)
-    suspend fun engage(key: String, version: String, url: String, language: String): KillswitchViewData? =
+    suspend fun engage(
+        key: String,
+        version: String,
+        url: String,
+        language: String,
+    ): KillswitchViewData? =
         try {
             Api.request(
                 key = key,
                 version = version,
                 url = url,
-                language = language
+                language = language,
             )?.let { response ->
                 response.error?.takeIf { it.isNotEmpty() }?.let { error ->
                     throw KillswitchException(error)
@@ -48,9 +53,9 @@ internal object Killswitch {
                         when (it.type) {
                             ButtonType.CANCEL -> KillswitchButtonType.NEGATIVE
                             ButtonType.URL -> KillswitchButtonType.POSITIVE
-                        }
+                        },
                     )
                 }
-                .orEmpty()
+                .orEmpty(),
         )
 }

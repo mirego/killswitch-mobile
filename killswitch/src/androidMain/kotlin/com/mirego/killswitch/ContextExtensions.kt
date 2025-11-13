@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 
-@Suppress("DEPRECATION")
 val Context.versionName: String
     get() = try {
         val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -13,6 +12,6 @@ val Context.versionName: String
             packageManager.getPackageInfo(packageName, 0)
         }
         packageInfo.versionName
-    } catch (e: PackageManager.NameNotFoundException) {
-        "unknown"
-    }
+    } catch (_: PackageManager.NameNotFoundException) {
+        null
+    }.orEmpty()

@@ -6,16 +6,17 @@ import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 
-internal actual fun httpClient(config: HttpClientConfig<*>.() -> Unit) = HttpClient(Darwin) {
-    config(this)
+internal actual fun httpClient(config: HttpClientConfig<*>.() -> Unit) =
+    HttpClient(Darwin) {
+        config(this)
 
-    engine {
-        configureRequest {
-            setAllowsCellularAccess(true)
+        engine {
+            configureRequest {
+                setAllowsCellularAccess(true)
+            }
+        }
+
+        install(ContentNegotiation) {
+            json(json)
         }
     }
-
-    install(ContentNegotiation) {
-        json(json)
-    }
-}
