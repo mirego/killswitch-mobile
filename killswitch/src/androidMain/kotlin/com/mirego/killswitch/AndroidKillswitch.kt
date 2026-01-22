@@ -51,6 +51,10 @@ object AndroidKillswitch {
             ?.run { listener?.onDialogShown() }
             ?: run { listener?.onOk() }
     }
+
+    fun initialize(configuration: Configuration) {
+        Killswitch.initialize(configuration)
+    }
 }
 
 private fun KillswitchViewData.createDialog(

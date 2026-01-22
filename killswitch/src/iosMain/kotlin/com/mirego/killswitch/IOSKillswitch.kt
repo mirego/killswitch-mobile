@@ -28,6 +28,12 @@ import platform.UIKit.UIWindowSceneDelegateProtocol
 import platform.UIKit.presentationController
 
 class IOSKillswitch {
+    companion object {
+        fun initialize(configuration: Configuration) {
+            Killswitch.initialize(configuration)
+        }
+    }
+
     @Throws(KillswitchException::class, CancellationException::class)
     suspend fun engage(
         key: String,
@@ -54,14 +60,14 @@ class IOSKillswitch {
             language = language,
         )
 
-    private val language: String
+    val language: String
         get() {
             val localeIdentifier: String = NSLocale.preferredLanguages[0].toString()
             val components = NSLocale.componentsFromLocaleIdentifier(localeIdentifier)
             return components[NSLocaleLanguageCode].toString()
         }
 
-    private val version: String
+    val version: String
         get() = NSBundle.mainBundle.infoDictionary?.get("CFBundleShortVersionString")?.toString().orEmpty()
 
     fun showDialog(viewData: KillswitchViewData?) = showDialog(viewData, null)

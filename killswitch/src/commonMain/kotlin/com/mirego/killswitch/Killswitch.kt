@@ -58,4 +58,8 @@ internal object Killswitch {
                 }
                 .orEmpty(),
         )
+
+    fun initialize(configuration: Configuration) {
+        Api.userAgent = configuration.userAgent
+    }
 }
