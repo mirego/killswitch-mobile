@@ -4,6 +4,7 @@ import com.mirego.killswitch.viewmodel.KillswitchButtonAction
 import com.mirego.killswitch.viewmodel.KillswitchButtonType
 import com.mirego.killswitch.viewmodel.KillswitchButtonViewData
 import com.mirego.killswitch.viewmodel.KillswitchViewData
+import kotlin.collections.emptyMap
 import kotlin.coroutines.cancellation.CancellationException
 import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
@@ -186,7 +187,7 @@ class IOSKillswitch {
                     }
                 } else {
                     NSURL.URLWithString(action.url)?.let {
-                        UIApplication.sharedApplication.openURL(it)
+                        UIApplication.sharedApplication.openURL(it, emptyMap<Any?, Any>()) {}
                     }
                     determineAlertDisplayState()
                 }
